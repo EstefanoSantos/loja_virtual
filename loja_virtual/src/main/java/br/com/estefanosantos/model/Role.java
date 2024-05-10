@@ -2,6 +2,7 @@ package br.com.estefanosantos.model;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,6 +27,7 @@ public class Role implements GrantedAuthority {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_role")
 	private Long id;
 	
+	@Column(nullable = false)
 	private String descricao;
 
 	@Override
