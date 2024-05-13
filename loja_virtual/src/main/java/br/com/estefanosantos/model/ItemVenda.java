@@ -16,26 +16,24 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @Entity
-@Table(name = "status_rastreio")
-@SequenceGenerator(name = "seq_status_rastreio", sequenceName = "seq_status_rastreio", initialValue = 1, allocationSize = 1)
-public class StatusRastreio implements Serializable {
-	
+@Table(name = "item_venda")
+@SequenceGenerator(name = "seq_item_venda", sequenceName = "seq_item_venda", initialValue = 1, allocationSize = 1)
+public class ItemVenda implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_status_rastreio")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_item_venda")
 	private Long id;
-
-	private String centroDistribuicao;
 	
-	private String estado;
+	private Double quantidade;
 	
-	private String cidade;
-	
-	private String status;
+	@ManyToOne
+	@JoinColumn(name = "produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "produto_fk"))
+	private Produto produto;
 	
 	@ManyToOne
 	@JoinColumn(name = "venda_compra_loja_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "venda_compra_loja_fk"))
@@ -54,9 +52,9 @@ public class StatusRastreio implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		StatusRastreio other = (StatusRastreio) obj;
+		ItemVenda other = (ItemVenda) obj;
 		return Objects.equals(id, other.id);
 	}
-	
+
 	
 }

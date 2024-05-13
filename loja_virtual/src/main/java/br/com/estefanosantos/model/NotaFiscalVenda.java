@@ -3,10 +3,14 @@ package br.com.estefanosantos.model;
 import java.io.Serializable;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -34,4 +38,8 @@ public class NotaFiscalVenda implements Serializable{
 	
 	@Column(columnDefinition = "text")
 	private String pdf;
+	
+	@OneToOne
+	@JoinColumn(name = "venda_compra_loja_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "venda_compra_loja_fk"))
+	private VendaCompraLoja vendaCompraLoja;
 }
