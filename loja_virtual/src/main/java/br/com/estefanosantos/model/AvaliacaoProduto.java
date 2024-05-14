@@ -2,6 +2,7 @@ package br.com.estefanosantos.model;
 
 import java.io.Serializable;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
@@ -30,6 +31,7 @@ public class AvaliacaoProduto implements Serializable {
 	
 	private String descricao;
 	
+	@Column(nullable = false)
 	private Integer nota;
 	
 	@ManyToOne(targetEntity = Pessoa.class)

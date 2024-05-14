@@ -3,6 +3,7 @@ package br.com.estefanosantos.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
@@ -29,6 +30,7 @@ public class ItemVenda implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_item_venda")
 	private Long id;
 	
+	@Column(nullable = false)
 	private Double quantidade;
 	
 	@ManyToOne

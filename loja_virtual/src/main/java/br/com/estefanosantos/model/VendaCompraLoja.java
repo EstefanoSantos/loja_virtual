@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
@@ -33,17 +34,22 @@ public class VendaCompraLoja implements Serializable{
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_venda_compra_loja")
 	private Long id;
 	
+	@Column(nullable = false)
 	private BigDecimal valorTotal;
 	
 	private BigDecimal valorDesconto;
 	
+	@Column(nullable = false)
 	private BigDecimal valorFrete;
 	
+	@Column(nullable = false)
 	private Integer diasEntrega;
 	
+	@Column(nullable = false)
 	@Temporal(TemporalType.DATE)
 	private Date dataVenda;
 	
+	@Column(nullable = false)
 	@Temporal(TemporalType.DATE)
 	private Date dataEntrega;
 	
