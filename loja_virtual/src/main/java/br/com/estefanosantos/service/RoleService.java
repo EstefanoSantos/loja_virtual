@@ -12,7 +12,11 @@ public class RoleService {
 	@Autowired
 	RoleRepository roleRepository;
 	
-	public void salvarRole(Role role) {
-		roleRepository.save(role);
+	public Role salvarRole(Role role) {
+		return roleRepository.save(role);
+	}
+	
+	public void apagarRole(Long id) {
+		roleRepository.deleteById(id);
 	}
 }
