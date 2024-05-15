@@ -1,11 +1,15 @@
 package br.com.estefanosantos.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +23,7 @@ public class RoleController {
 	RoleService roleService;
 	
 	@ResponseBody
-	@PostMapping("/salvar-role")
+	@PostMapping(value = "/salvar-role")
 	public ResponseEntity<Role> salvar(@RequestBody Role role) {
 		
 		Role roleSaved = roleService.salvarRole(role);
@@ -28,11 +32,29 @@ public class RoleController {
 	}
 	
 	@ResponseBody
-	@PostMapping("/apagar-role")
-	public ResponseEntity<String> apagar(@RequestParam Long id) {
+	@DeleteMapping("/apagar-role/{id}")
+	public ResponseEntity<String> apagar(@PathVariable("id") Long id) {
 		
 		roleService.apagarRole(id);
 		
 		return new ResponseEntity<>("Registro removido!", HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping("/buscar-role/{id}")
+	public ResponseEntity<Role> buscarPorId(@PathVariable("id") Long id) {
+		
+		var role = roleService.buscar(id);
+		
+		return new ResponseEntity<Role>(role, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping("/buscar-por-desc/{desc}")
+	public ResponseEntity<List<Role>> buscarPorDesc(@PathVariable("desc") String desc) {
+		
+		List<Role> roles = roleService.buscarPorDesc(desc);
+		
+		return new ResponseEntity<List<Role>>(roles, HttpStatus.OK);
 	}
 }
