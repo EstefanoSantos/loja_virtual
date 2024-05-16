@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.estefanosantos.model.Role;
-import br.com.estefanosantos.service.RoleService;
+import br.com.estefanosantos.service.impl.RoleServiceImpl;
 
 @RestController
 public class RoleController {
 
 	@Autowired
-	RoleService roleService;
+	RoleServiceImpl roleService;
 	
 	@ResponseBody
 	@PostMapping(value = "/salvar-role")
@@ -44,7 +44,7 @@ public class RoleController {
 	@GetMapping("/buscar-role/{id}")
 	public ResponseEntity<Role> buscarPorId(@PathVariable("id") Long id) {
 		
-		var role = roleService.buscar(id);
+		var role = roleService.buscarRole(id);
 		
 		return new ResponseEntity<Role>(role, HttpStatus.OK);
 	}

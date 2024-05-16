@@ -23,7 +23,7 @@ SET row_security = off;
 -- Name: loja_virtual; Type: DATABASE; Schema: -; Owner: postgres
 --
 
-CREATE DATABASE loja_virtual WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'Portuguese_Brazil.1252';
+CREATE DATABASE IF NOT EXISTS loja_virtual WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'Portuguese_Brazil.1252';
 
 
 ALTER DATABASE loja_virtual OWNER TO postgres;
