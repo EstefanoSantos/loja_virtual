@@ -3,17 +3,15 @@ package br.com.estefanosantos.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
-import br.com.estefanosantos.service.impl.UserDetailsServiceImpl;
-import jakarta.servlet.http.HttpSessionEvent;
-import jakarta.servlet.http.HttpSessionIdListener;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
@@ -21,24 +19,29 @@ import jakarta.servlet.http.HttpSessionIdListener;
 public class WebConfigSecurity {
 
 	@Autowired
-	UserDetailsServiceImpl detailsServiceImpl;
-	
-	@Bean
-	void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(detailsServiceImpl).passwordEncoder(new BCryptPasswordEncoder());
-	}
-	
+	JwtFilter userAuthenticationFilter;
+		
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests(authorize -> { authorize
-				.anyRequest()
-				.permitAll();
-				})
-				.csrf(AbstractHttpConfigurer::disable);			
-				return http.build();
+		
+		return http.csrf(AbstractHttpConfigurer::disable)
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.authorizeHttpRequests(authorize ->  authorize
+				.requestMatchers("/login").permitAll()
+				.anyRequest().authenticated()
+				)
+				.addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)			
+				.build();
 
 	}
-
 	
-
+	@Bean
+	AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+		return authenticationConfiguration.getAuthenticationManager();
+	}
+	
+	@Bean
+	BCryptPasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}	
 }

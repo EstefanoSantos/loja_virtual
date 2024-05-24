@@ -11,7 +11,7 @@ import br.com.estefanosantos.model.Usuario;
 @Transactional
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	
-	@Query(value = "select u from usuario u where u.login = ?1")
+	@Query(value = "select u from Usuario u where u.login = ?1")
 	Usuario findUserByLogin(String login);
 
 }
