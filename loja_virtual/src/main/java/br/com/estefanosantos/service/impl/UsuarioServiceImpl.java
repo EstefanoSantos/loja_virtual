@@ -1,11 +1,16 @@
 package br.com.estefanosantos.service.impl;
 
-import java.io.IOException;
+import java.util.List;
 
-import org.springframework.security.authentication.AuthenticationManager;
+import br.com.estefanosantos.controller.dto.CriarUsuarioDto;
+import br.com.estefanosantos.model.PessoaFisica;
+import br.com.estefanosantos.model.Role;
+import br.com.estefanosantos.repository.PessoaFisicaRepository;
+import br.com.estefanosantos.repository.RoleRepository;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,38 +22,59 @@ import br.com.estefanosantos.service.UsuarioService;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
-	
-	private final AuthenticationManager authenticationManager;
-	
-	private final UsuarioRepository usuarioRepository;
-	
+
 	private final JwtService jwtService;
-	
+	private final UsuarioRepository usuarioRepository;
 	private final BCryptPasswordEncoder encoder;
-				
-	public UsuarioServiceImpl(UsuarioRepository usuarioRepository, BCryptPasswordEncoder encoder, JwtService jwtService) {
-		this.authenticationManager = null;
-		this.usuarioRepository = usuarioRepository;
+	private final RoleRepository roleRepository;
+	private final PessoaFisicaRepository pessoaFisicaRepository;
+
+	public UsuarioServiceImpl(JwtService jwtService, UsuarioRepository usuarioRepository, BCryptPasswordEncoder encoder, RoleRepository roleRepository, PessoaFisicaRepository pessoaFisicaRepository) {
 		this.jwtService = jwtService;
+		this.usuarioRepository = usuarioRepository;
 		this.encoder = encoder;
+        this.roleRepository = roleRepository;
+        this.pessoaFisicaRepository = pessoaFisicaRepository;
+    }
+
+	@Override
+	public Usuario novoUsuario(CriarUsuarioDto dto) {
+		Usuario user = usuarioRepository.findUserByLogin(dto.login());
+
+		if (user != null) {
+			throw new EntityExistsException("Login já existe.");
+		}
+
+		if (dto.pessoaFisica() == null) {
+			throw new IllegalArgumentException("Id da pessoa física não pode ser nulo");
+		}
+
+		PessoaFisica pessoaFisica = pessoaFisicaRepository.findById(dto.pessoaFisica())
+				.orElseThrow(() -> new EntityNotFoundException("Pessoa Física não encontrada"));
+
+		List<Role> roles = roleRepository.buscarPorDesc("USER");
+		Usuario usuario = new Usuario();
+		usuario.setLogin(dto.login());
+		usuario.setPassword(encoder.encode(dto.password()));
+		usuario.setData_att_password(dto.dataAttPassword());
+		usuario.setPessoa(pessoaFisica);
+		usuario.setRoles(roles);
+
+		return usuarioRepository.save(usuario);
 	}
 
 	@Override
-	public String userLogin(LoginDto dto) throws IOException {		
-		
-			Usuario isUser = usuarioRepository.findUserByLogin(dto.login());
-			
-			if (isUser == null || !isUser.isLoginCorrect(dto, encoder)) {
-				throw new BadCredentialsException("User invalid or doesn't exists");						
-			}
-			
-			UsernamePasswordAuthenticationToken authenticationToken =
-					new UsernamePasswordAuthenticationToken(isUser.getUsername(), isUser.getPassword(), isUser.getAuthorities());
-			
-			Authentication authentication = authenticationManager.authenticate(authenticationToken);
-			
-			return jwtService.generateToken((Usuario)authentication.getPrincipal());	
-		
+	public String usuarioLogin(LoginDto dto) {
+		Usuario user = usuarioRepository.findUserByLogin(dto.login());
+
+		if (user == null || !user.isLoginCorrect(dto, encoder)) {
+			throw new BadCredentialsException("User or password invalid!");
+		}
+
+		UsernamePasswordAuthenticationToken authenticationToken =
+				new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), user.getAuthorities());
+
+		return jwtService.generateToken(authenticationToken);
 	}
 
 

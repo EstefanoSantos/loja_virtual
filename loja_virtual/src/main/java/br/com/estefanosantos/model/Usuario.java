@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +32,8 @@ import jakarta.persistence.UniqueConstraint;
 @Entity
 @Table(name = "usuario")
 @SequenceGenerator(name = "seq_usuario", sequenceName = "seq_usuario", initialValue = 1, allocationSize = 1)
+@Getter
+@Setter
 public class Usuario implements UserDetails {
 		
 	private static final long serialVersionUID = 1L;
@@ -52,7 +56,7 @@ public class Usuario implements UserDetails {
 	@JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
 	private Pessoa pessoa;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "usuario_role", uniqueConstraints = @UniqueConstraint(columnNames = {"usuario_id", "role_id"},
 	name = "unique_role_user"),
 	
@@ -67,7 +71,6 @@ public class Usuario implements UserDetails {
 		return encoder.matches(dto.password(), this.password);
 	}
 
-	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {		
 		return this.roles;
