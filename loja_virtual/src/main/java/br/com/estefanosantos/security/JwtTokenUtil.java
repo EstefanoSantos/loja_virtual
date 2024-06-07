@@ -11,10 +11,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
-import org.springframework.stereotype.Service;
+import org.springframework.security.oauth2.jwt.JwtEncodingException;
+import org.springframework.stereotype.Component;
 
-@Service
-public class JwtService {
+@Component
+public class JwtTokenUtil {
 
 	@Autowired
 	private JwtEncoder encoder;
@@ -22,31 +23,35 @@ public class JwtService {
 
 	public String generateToken(Authentication authentication) {
 
-		String scopes = authentication.getAuthorities().stream()
-				.map(GrantedAuthority::getAuthority)
-				.collect(Collectors.joining(" "));
+		try {
+			String scopes = authentication.getAuthorities().stream()
+					.map(GrantedAuthority::getAuthority)
+					.collect(Collectors.joining(" "));
 
-		var claims = JwtClaimsSet.builder()
-				.issuer(ISSUER)
-				.issuedAt(creationTime())
-				.expiresAt(expirationDate())
-				.subject(authentication.getName())
-				.claim("scope", scopes)
-				.build();
+			var claims = JwtClaimsSet.builder()
+					.issuer(ISSUER)
+					.issuedAt(creationTime())
+					.expiresAt(expirationDate())
+					.subject(authentication.getName())
+					.claim("scope", scopes)
+					.build();
 
-		return encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-
+			String token = encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();	
+			
+			return "{\"Authorization\": \""+ token + "\"}";
+			
+		} catch (JwtEncodingException e) {
+			throw new RuntimeException();
+		}
+		
 	}
 
-	
 	private Instant creationTime() {
 		return ZonedDateTime.now(ZoneId.of("America/Sao_Paulo")).toInstant();
 	}
-	
+
 	private Instant expirationDate() {
-		return ZonedDateTime.now(ZoneId.of("America/Sao_Paulo")).plusHours(4).toInstant();
+		return ZonedDateTime.now(ZoneId.of("America/Sao_Paulo")).plusDays(10).toInstant();
 	}
-	
-	
 
 }

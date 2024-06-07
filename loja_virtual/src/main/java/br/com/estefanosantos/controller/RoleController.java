@@ -23,7 +23,7 @@ public class RoleController {
 	RoleServiceImpl roleService;
 	
 	@ResponseBody
-	@PostMapping(value = "/salvar-role")
+	@PostMapping(value = "/salvarRole")
 	public ResponseEntity<Role> salvar(@RequestBody Role role) {
 		
 		Role roleSaved = roleService.salvarRole(role);

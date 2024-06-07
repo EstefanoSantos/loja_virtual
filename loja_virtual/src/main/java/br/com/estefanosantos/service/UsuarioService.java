@@ -6,8 +6,6 @@ import br.com.estefanosantos.model.Usuario;
 
 public interface UsuarioService {
 
-	String usuarioLogin(LoginDto dto) throws Exception;
-
 	Usuario novoUsuario(CriarUsuarioDto dto);
 
 }
