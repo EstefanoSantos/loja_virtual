@@ -1,7 +1,10 @@
 package br.com.estefanosantos;
 
+import java.sql.SQLException;
 import java.util.List;
 
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -46,6 +49,29 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(erroDto, HttpStatus.INTERNAL_SERVER_ERROR);
 		
 	} 
+	
+	@ExceptionHandler({DataIntegrityViolationException.class, ConstraintViolationException.class, SQLException.class})
+	protected ResponseEntity<Object> handleDataIntegrityException(Exception ex) {
+		
+		ObjectErroDto erroDto = new ObjectErroDto();
+		
+		StringBuilder msg = new StringBuilder();
+		
+		if (ex instanceof DataIntegrityViolationException) {
+			msg.append("Erro de integridade no banco: ").append(ex.getMessage());
+		} else if (ex instanceof ConstraintViolationException) {
+			msg.append("Erro de chave estrangeira: ").append(ex.getMessage());
+		} else if (ex instanceof SQLException) {
+			msg.append("Erro de Sql: ").append(ex.getMessage());
+		} else {
+			msg.append(ex.getMessage());
+		}
+		
+		erroDto.setErro(msg.toString());
+		erroDto.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.toString());
+			
+		return new ResponseEntity<>(erroDto, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 
 	@ExceptionHandler(BadCredentialsException.class)
 	protected ResponseEntity<String> handleBadCredentialsException(BadCredentialsException ex) {
@@ -56,6 +82,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<String> handleJwtException(JwtException ex) {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Cannot generate token.");
 	}
+
 		
 }
  
