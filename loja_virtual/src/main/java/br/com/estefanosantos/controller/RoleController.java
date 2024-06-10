@@ -32,7 +32,7 @@ public class RoleController {
 	}
 	
 	@ResponseBody
-	@DeleteMapping("/apagar-role/{id}")
+	@DeleteMapping("/apagarRole/{id}")
 	public ResponseEntity<String> apagar(@PathVariable("id") Long id) {
 		
 		roleService.apagarRole(id);
@@ -41,7 +41,7 @@ public class RoleController {
 	}
 	
 	@ResponseBody
-	@GetMapping("/buscar-role/{id}")
+	@GetMapping("/buscarRole/{id}")
 	public ResponseEntity<Role> buscarPorId(@PathVariable("id") Long id) {
 		
 		var role = roleService.buscarRole(id);
@@ -50,7 +50,7 @@ public class RoleController {
 	}
 	
 	@ResponseBody
-	@GetMapping("/buscar-por-desc/{desc}")
+	@GetMapping("/buscarPorDesc/{desc}")
 	public ResponseEntity<List<Role>> buscarPorDesc(@PathVariable("desc") String desc) {
 		
 		List<Role> roles = roleService.buscarPorDesc(desc);

@@ -3,6 +3,7 @@ package br.com.estefanosantos.security;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.nimbusds.jose.jwk.JWK;
@@ -36,6 +38,12 @@ public class WebConfigSecurity {
 
 	@Value("${jwt.private.key}")
 	private RSAPrivateKey privateKey;
+	
+	AuthenticationEntryPoint entryPoint;
+	
+	public WebConfigSecurity(@Qualifier("jwtAuthEntryPoint") AuthenticationEntryPoint entryPoint) {
+		this.entryPoint = entryPoint;
+	}
 		
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -50,6 +58,7 @@ public class WebConfigSecurity {
 				)
 				.httpBasic(Customizer.withDefaults())
 				.oauth2ResourceServer(oauth2 -> oauth2
+						.authenticationEntryPoint(entryPoint)
 		                .jwt(jwt -> jwt
 		                    .decoder(decoder()))		             
 		            )
@@ -57,10 +66,12 @@ public class WebConfigSecurity {
 				return http.build();
 
 	}
+	
+	
 
 	@Bean
-	JwtDecoder decoder() {			
-			return NimbusJwtDecoder.withPublicKey(this.publicKey).build();		
+	JwtDecoder decoder() {		
+			return NimbusJwtDecoder.withPublicKey(this.publicKey).build();				
 	}	
 
 	@Bean

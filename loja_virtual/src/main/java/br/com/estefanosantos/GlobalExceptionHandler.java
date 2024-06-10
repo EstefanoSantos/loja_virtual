@@ -74,15 +74,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 
 	@ExceptionHandler(BadCredentialsException.class)
-	protected ResponseEntity<String> handleBadCredentialsException(BadCredentialsException ex) {
+	public ResponseEntity<String> handleBadCredentialsException(BadCredentialsException ex) {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Username or Password invalid.");
 	}
 
 	@ExceptionHandler(JwtEncodingException.class)
-	protected ResponseEntity<String> handleJwtException(JwtException ex) {
+	public ResponseEntity<String> handleJwtException(JwtException ex) {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Cannot generate token.");
 	}
-
 		
 }
  
