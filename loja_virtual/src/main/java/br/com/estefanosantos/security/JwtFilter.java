@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.estefanosantos.controller.dto.ObjectErroDto;
+import br.com.estefanosantos.dto.ObjectErroDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,7 +25,7 @@ public class JwtFilter implements AuthenticationEntryPoint {
 	public JwtFilter(ObjectMapper mapper) {
 		this.mapper = mapper;
 	}
-		
+	
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {

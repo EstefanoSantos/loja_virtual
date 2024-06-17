@@ -5,7 +5,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import br.com.estefanosantos.controller.dto.LoginDto;
+import br.com.estefanosantos.dto.LoginDto;
 import br.com.estefanosantos.model.Usuario;
 import br.com.estefanosantos.repository.UsuarioRepository;
 

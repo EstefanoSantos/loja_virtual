@@ -10,7 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import br.com.estefanosantos.controller.dto.LoginDto;
+import br.com.estefanosantos.dto.LoginDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -42,7 +42,7 @@ public class Usuario implements UserDetails {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_usuario")
 	private Long id;
 	
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String login;
 	
 	@Column(nullable = false)
@@ -55,6 +55,10 @@ public class Usuario implements UserDetails {
 	@ManyToOne(targetEntity = Pessoa.class)
 	@JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
 	private Pessoa pessoa;
+	
+	@ManyToOne(targetEntity = Pessoa.class)
+	@JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
+	private Pessoa empresa;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "usuario_role", uniqueConstraints = @UniqueConstraint(columnNames = {"usuario_id", "role_id"},
@@ -70,6 +74,7 @@ public class Usuario implements UserDetails {
 	public boolean isLoginCorrect(LoginDto dto, PasswordEncoder encoder) {
 		return encoder.matches(dto.password(), this.password);
 	}
+	
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {		

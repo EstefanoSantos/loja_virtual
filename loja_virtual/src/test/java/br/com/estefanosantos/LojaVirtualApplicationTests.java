@@ -2,11 +2,13 @@ package br.com.estefanosantos;
 
 import org.springframework.http.MediaType;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -19,10 +21,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.estefanosantos.controller.RoleController;
+import br.com.estefanosantos.exceptions.CustomException;
 import br.com.estefanosantos.model.Role;
 import br.com.estefanosantos.repository.RoleRepository;
 import junit.framework.TestCase;
 
+@Profile("test")
 @SpringBootTest(classes = LojaVirtualApplication.class)
 class LojaVirtualApplicationTests extends TestCase {
 
@@ -46,13 +50,13 @@ class LojaVirtualApplicationTests extends TestCase {
 		
 		Role role = new Role();
 		
-		role.setDescricao("ROLE_COMPRADOR");
+		role.setDescricao("ROLE_COMPRADOR" + Calendar.getInstance().getTimeInMillis());
 		
 		/** criação objeto para mapeamento objeto java - json **/
 		
 		ObjectMapper mapper = new ObjectMapper();
 		
-		ResultActions retornoApi = mockMvc.perform(MockMvcRequestBuilders.post("/salvar-role")
+		ResultActions retornoApi = mockMvc.perform(MockMvcRequestBuilders.post("/salvarRole")
 												.content(mapper.writeValueAsString(role))
 												.accept(MediaType.APPLICATION_JSON)
 												.contentType(MediaType.APPLICATION_JSON));
@@ -77,7 +81,7 @@ class LojaVirtualApplicationTests extends TestCase {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		
-		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.get("/buscar-role/" + role.getId())
+		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.get("/buscarRole/" + role.getId())
 																	 .content(mapper.writeValueAsString(role))
 																	 .accept(MediaType.APPLICATION_JSON)
 																	 .contentType(MediaType.APPLICATION_JSON));
@@ -96,7 +100,7 @@ class LojaVirtualApplicationTests extends TestCase {
 		
 		Long id = 18L;
 		
-		ResultActions retornoApi = mockMvc.perform(MockMvcRequestBuilders.delete("/apagar-role/" + id));
+		ResultActions retornoApi = mockMvc.perform(MockMvcRequestBuilders.delete("/apagarRole/" + id));
 				                                  
 		System.out.println("Status Api: " + retornoApi.andReturn().getResponse().getStatus());
 		System.out.println("Retorno Api: " + retornoApi.andReturn().getResponse().getContentAsString());
@@ -119,7 +123,7 @@ class LojaVirtualApplicationTests extends TestCase {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		
-		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.get("/buscar-por-desc/OBTER_LIST")
+		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.get("/buscarPorDesc/OBTER_LIST")
 																	 .content(mapper.writeValueAsString(role))
 																	 .accept(MediaType.APPLICATION_JSON)
 																	 .contentType(MediaType.APPLICATION_JSON));
@@ -130,7 +134,7 @@ class LojaVirtualApplicationTests extends TestCase {
 										  new TypeReference<List<Role>>() {
 										});
 		
-		assertEquals(1, retornoApiList.size());
+		assertEquals(5, retornoApiList.size());
 		assertEquals(role.getDescricao(), retornoApiList.get(0).getDescricao());
 		
 		roleRepository.deleteById(role.getId());
@@ -139,11 +143,11 @@ class LojaVirtualApplicationTests extends TestCase {
 	
 	
 	@Test
-	void testeCadastroRole() {
+	void testeCadastroRole() throws CustomException {
 		
 		Role role = new Role();
 		
-		role.setDescricao("ROLE_USER");
+		role.setDescricao("ROLE_USER" + Calendar.getInstance().getTimeInMillis());
 		
 		assertEquals(true, role.getId() == null);
 		

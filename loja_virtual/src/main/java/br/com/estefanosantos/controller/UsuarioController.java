@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.estefanosantos.controller.dto.CriarUsuarioDto;
+import br.com.estefanosantos.dto.CriarUsuarioDto;
 import br.com.estefanosantos.model.Usuario;
 import br.com.estefanosantos.service.UsuarioService;
 

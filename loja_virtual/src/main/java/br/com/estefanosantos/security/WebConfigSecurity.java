@@ -53,7 +53,7 @@ public class WebConfigSecurity {
 				.authorizeHttpRequests(
 						authorize ->  authorize
 								.requestMatchers(HttpMethod.POST, "/auth").permitAll()
-								.requestMatchers(HttpMethod.POST, "/newUser").permitAll()
+								.requestMatchers(HttpMethod.POST, "/salvarPj").permitAll()
 								.anyRequest().authenticated()
 				)
 				.httpBasic(Customizer.withDefaults())
@@ -67,8 +67,6 @@ public class WebConfigSecurity {
 
 	}
 	
-	
-
 	@Bean
 	JwtDecoder decoder() {		
 			return NimbusJwtDecoder.withPublicKey(this.publicKey).build();				

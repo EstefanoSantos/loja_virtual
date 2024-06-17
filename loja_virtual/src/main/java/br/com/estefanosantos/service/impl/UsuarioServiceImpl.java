@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import br.com.estefanosantos.controller.dto.CriarUsuarioDto;
+import br.com.estefanosantos.dto.CriarUsuarioDto;
 import br.com.estefanosantos.model.PessoaFisica;
 import br.com.estefanosantos.model.Role;
 import br.com.estefanosantos.model.Usuario;

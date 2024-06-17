@@ -1,4 +1,4 @@
-package br.com.estefanosantos.controller.dto;
+package br.com.estefanosantos.dto;
 
 import java.io.Serializable;
 

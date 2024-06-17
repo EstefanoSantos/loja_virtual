@@ -1,6 +1,6 @@
 package br.com.estefanosantos.service;
 
-import br.com.estefanosantos.controller.dto.CriarUsuarioDto;
+import br.com.estefanosantos.dto.CriarUsuarioDto;
 import br.com.estefanosantos.model.Usuario;
 
 public interface UsuarioService {

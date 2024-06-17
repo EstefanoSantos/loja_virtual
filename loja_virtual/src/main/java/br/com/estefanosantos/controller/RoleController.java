@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.estefanosantos.exceptions.CustomException;
 import br.com.estefanosantos.model.Role;
 import br.com.estefanosantos.service.impl.RoleServiceImpl;
 
@@ -24,7 +25,7 @@ public class RoleController {
 	
 	@ResponseBody
 	@PostMapping(value = "/salvarRole")
-	public ResponseEntity<Role> salvar(@RequestBody Role role) {
+	public ResponseEntity<Role> salvar(@RequestBody Role role) throws CustomException {
 		
 		Role roleSaved = roleService.salvarRole(role);
 		
@@ -42,7 +43,7 @@ public class RoleController {
 	
 	@ResponseBody
 	@GetMapping("/buscarRole/{id}")
-	public ResponseEntity<Role> buscarPorId(@PathVariable("id") Long id) {
+	public ResponseEntity<Role> buscarPorId(@PathVariable("id") Long id) throws CustomException {
 		
 		var role = roleService.buscarRole(id);
 		

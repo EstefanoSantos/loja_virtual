@@ -1,4 +1,4 @@
-package br.com.estefanosantos;
+package br.com.estefanosantos.exceptions;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.oauth2.jwt.JwtEncodingException;
 import org.springframework.security.oauth2.jwt.JwtException;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import br.com.estefanosantos.controller.dto.ObjectErroDto;
+import br.com.estefanosantos.dto.ObjectErroDto;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -37,8 +38,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 			List<ObjectError> list = ((MethodArgumentNotValidException) ex).getBindingResult().getAllErrors();
 			
 			for (ObjectError objError : list) {
-				msg.append(objError.getDefaultMessage()).append("\n");
+				msg.append(objError.getDefaultMessage()).append("\n");			
 			}
+		} else if (ex instanceof HttpMessageNotReadableException) {			
+			msg.append("Não está sendo enviado dados no corpo (BODY) da requisição.");	
 		} else {
 			msg.append(ex.getMessage());
 		}
@@ -71,6 +74,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		erroDto.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.toString());
 			
 		return new ResponseEntity<>(erroDto, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@ExceptionHandler(CustomException.class)
+	public ResponseEntity<Object> handleCustomException(CustomException ex) {
+		ObjectErroDto erroDto = new ObjectErroDto();
+		
+		erroDto.setErro(ex.getMessage());
+		erroDto.setStatus(HttpStatus.OK.toString());
+		
+		return new ResponseEntity<>(erroDto, HttpStatus.OK);
 	}
 
 	@ExceptionHandler(BadCredentialsException.class)
