@@ -30,15 +30,14 @@ public class PessoaJuridicaServiceImpl implements PessoaJuridicaService{
 	private BCryptPasswordEncoder passwordEncoder;
 
 	@Override
-	public PessoaJuridica salvarPessoaJuridica(PessoaJuridica pessoaJuridica) throws CustomException {
+	public PessoaJuridica salvarPessoaJuridica(PessoaJuridica pj) throws CustomException {	
 		
-		PessoaJuridica pj = pessoaJuridicaRepository.findByCnpj(pessoaJuridica.getCnpj());
-		
-		if (pj != null) {
-			throw new CustomException("Já existe CNPJ cadastrado com o número: " + pj.getCnpj());
+		for (int i = 0; i < pj.getEnderecos().size(); i++) {
+			pj.getEnderecos().get(i).setEmpresa(pj);
+			pj.getEnderecos().get(i).setPessoa(pj);
 		}
 			
-		pj = pessoaJuridicaRepository.save(pessoaJuridica);
+		pj = pessoaJuridicaRepository.save(pj);
 		
 		Usuario usuario = usuarioRepository.findUserByPessoa(pj.getId(), pj.getEmail());
 		

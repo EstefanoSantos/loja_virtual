@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.estefanosantos.exceptions.CustomException;
 import br.com.estefanosantos.model.PessoaJuridica;
+import br.com.estefanosantos.repository.PessoaJuridicaRepository;
 import br.com.estefanosantos.service.PessoaJuridicaService;
 
 @RestController
@@ -17,6 +18,9 @@ public class PessoaJuridicaController {
 	
 	@Autowired
 	PessoaJuridicaService pessoaJuridicaService;
+	
+	@Autowired
+	PessoaJuridicaRepository pessoaJuridicaRepository;
 	
 	@ResponseBody
 	@PostMapping("/salvarPj")
@@ -26,7 +30,13 @@ public class PessoaJuridicaController {
 			throw new CustomException("Pessoa Jurídica não pode ser NULL.");
 		}
 		
-		PessoaJuridica pj = pessoaJuridicaService.salvarPessoaJuridica(pessoaJuridica);
+		PessoaJuridica pj = pessoaJuridicaRepository.findByCnpj(pessoaJuridica.getCnpj());
+		
+		if (pj != null) {
+			throw new CustomException("Cnpj já cadastrado no sistema.");
+		}
+		
+		pj = pessoaJuridicaService.salvarPessoaJuridica(pessoaJuridica);
 		
 		return new ResponseEntity<>(pj, HttpStatus.OK);
 	}
