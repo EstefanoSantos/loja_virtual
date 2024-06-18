@@ -29,6 +29,9 @@ public class PessoaJuridicaServiceImpl implements PessoaJuridicaService{
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
+	@Autowired
+	private EmailService emailService;
+	
 	@Override
 	public PessoaJuridica salvarPessoaJuridica(PessoaJuridica pj) throws CustomException {	
 		
@@ -60,6 +63,19 @@ public class PessoaJuridicaServiceImpl implements PessoaJuridicaService{
 			usuario.setPassword(senhaCript);
 			
 			usuario = usuarioRepository.save(usuario);
+			
+			StringBuilder mensagem = new StringBuilder();
+			
+			mensagem.append("<b>Cadastro efetuado com sucesso!</b><br>");
+			mensagem.append("<b>Login: </b>" + pj.getEmail() + "<br>");
+			mensagem.append("<b>Senha: </b>").append(senha).append("</br>");
+			mensagem.append("Obrigado!");
+			
+			try {
+				emailService.sendEmailHtml(pj.getEmail(), "Cadastro efetuado com sucesso na loja virtual", mensagem.toString());
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 			
 		}
 		
