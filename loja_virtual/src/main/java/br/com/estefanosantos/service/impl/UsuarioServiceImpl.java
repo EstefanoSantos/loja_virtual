@@ -50,7 +50,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 		Usuario usuario = new Usuario();
 		usuario.setLogin(dto.login());
 		usuario.setPassword(encoder.encode(dto.password()));
-		usuario.setData_att_password(dto.dataAttPassword());
+		usuario.setDataAttPassword(dto.dataAttPassword());
 		usuario.setPessoa(pessoaFisica);
 		usuario.setRoles(roles);
 

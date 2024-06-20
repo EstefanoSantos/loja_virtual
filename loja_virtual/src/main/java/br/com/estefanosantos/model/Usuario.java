@@ -50,7 +50,7 @@ public class Usuario implements UserDetails {
 	
 	@Column(nullable = false)
 	@Temporal(TemporalType.DATE)
-	private Date data_att_password;
+	private Date dataAttPassword;
 	
 	@ManyToOne(targetEntity = Pessoa.class)
 	@JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))

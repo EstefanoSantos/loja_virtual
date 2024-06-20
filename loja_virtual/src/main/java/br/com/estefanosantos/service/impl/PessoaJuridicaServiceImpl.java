@@ -53,7 +53,7 @@ public class PessoaJuridicaServiceImpl implements PessoaJuridicaService{
 			}
 			
 			usuario = new Usuario();
-			usuario.setData_att_password(Calendar.getInstance().getTime());
+			usuario.setDataAttPassword(Calendar.getInstance().getTime());
 			usuario.setEmpresa(pj);
 			usuario.setPessoa(pj);
 			usuario.setLogin(pj.getEmail());
@@ -63,6 +63,7 @@ public class PessoaJuridicaServiceImpl implements PessoaJuridicaService{
 			usuario.setPassword(senhaCript);
 			
 			usuario = usuarioRepository.save(usuario);
+			usuarioRepository.insereRole(usuario.getId());
 			
 			StringBuilder mensagem = new StringBuilder();
 			
