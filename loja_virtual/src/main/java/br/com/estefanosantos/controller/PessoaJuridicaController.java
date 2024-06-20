@@ -30,10 +30,22 @@ public class PessoaJuridicaController {
 			throw new CustomException("Pessoa Jurídica não pode ser NULL.");
 		}
 		
-		PessoaJuridica pj = pessoaJuridicaRepository.findByCnpj(pessoaJuridica.getCnpj());
+		PessoaJuridica pj = pessoaJuridicaRepository.existeCnpj(pessoaJuridica.getCnpj());
 		
 		if (pj != null) {
 			throw new CustomException("Cnpj já cadastrado no sistema.");
+		}
+		
+		pj = pessoaJuridicaRepository.existeEmail(pessoaJuridica.getEmail());
+		
+		if (pj != null) {
+			throw new CustomException("Email para Pessoa Jurídica já cadastrado no sistema.");
+		}
+		
+		pj = pessoaJuridicaRepository.existeInscricaoEstadual(pessoaJuridica.getInscricaoEstadual());
+		
+		if (pj != null) {
+			throw new CustomException("Já existe Pessoa Jurídica com inscrição estadual de número " + pessoaJuridica.getInscricaoEstadual());
 		}
 		
 		pj = pessoaJuridicaService.salvarPessoaJuridica(pessoaJuridica);
