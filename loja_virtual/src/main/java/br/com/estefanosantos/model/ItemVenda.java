@@ -14,11 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
 
-@Setter
-@Getter
 @Entity
 @Table(name = "item_venda")
 @SequenceGenerator(name = "seq_item_venda", sequenceName = "seq_item_venda", initialValue = 1, allocationSize = 1)

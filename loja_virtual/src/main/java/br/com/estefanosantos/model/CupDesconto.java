@@ -18,11 +18,7 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import lombok.Getter;
-import lombok.Setter;
 
-@Setter
-@Getter
 @Entity
 @Table(name = "cupom_desconto")
 @SequenceGenerator(name = "seq_cup_desconto", sequenceName = "seq_cup_desconto", initialValue = 1, allocationSize = 1)
@@ -64,6 +60,54 @@ public class CupDesconto implements Serializable {
 			return false;
 		CupDesconto other = (CupDesconto) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getCodigoDescricao() {
+		return codigoDescricao;
+	}
+
+	public void setCodigoDescricao(String codigoDescricao) {
+		this.codigoDescricao = codigoDescricao;
+	}
+
+	public BigDecimal getValorRealDesc() {
+		return valorRealDesc;
+	}
+
+	public void setValorRealDesc(BigDecimal valorRealDesc) {
+		this.valorRealDesc = valorRealDesc;
+	}
+
+	public BigDecimal getValorPorcentagemDesc() {
+		return valorPorcentagemDesc;
+	}
+
+	public void setValorPorcentagemDesc(BigDecimal valorPorcentagemDesc) {
+		this.valorPorcentagemDesc = valorPorcentagemDesc;
+	}
+
+	public Date getDataValidadeCupom() {
+		return dataValidadeCupom;
+	}
+
+	public void setDataValidadeCupom(Date dataValidadeCupom) {
+		this.dataValidadeCupom = dataValidadeCupom;
+	}
+
+	public Pessoa getEmpresa() {
+		return empresa;
+	}
+
+	public void setEmpresa(Pessoa empresa) {
+		this.empresa = empresa;
 	}
 	
 	

@@ -13,11 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "status_rastreio")
 @SequenceGenerator(name = "seq_status_rastreio", sequenceName = "seq_status_rastreio", initialValue = 1, allocationSize = 1)
@@ -60,6 +56,62 @@ public class StatusRastreio implements Serializable {
 			return false;
 		StatusRastreio other = (StatusRastreio) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getCentroDistribuicao() {
+		return centroDistribuicao;
+	}
+
+	public void setCentroDistribuicao(String centroDistribuicao) {
+		this.centroDistribuicao = centroDistribuicao;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+	public String getCidade() {
+		return cidade;
+	}
+
+	public void setCidade(String cidade) {
+		this.cidade = cidade;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public VendaCompraLoja getVendaCompraLoja() {
+		return vendaCompraLoja;
+	}
+
+	public void setVendaCompraLoja(VendaCompraLoja vendaCompraLoja) {
+		this.vendaCompraLoja = vendaCompraLoja;
+	}
+
+	public Pessoa getEmpresa() {
+		return empresa;
+	}
+
+	public void setEmpresa(Pessoa empresa) {
+		this.empresa = empresa;
 	}
 	
 	
