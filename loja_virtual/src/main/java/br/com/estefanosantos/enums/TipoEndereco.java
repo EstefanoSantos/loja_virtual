@@ -1,10 +1,5 @@
 package br.com.estefanosantos.enums;
 
-import lombok.Getter;
-import lombok.ToString;
-
-@ToString
-@Getter
 public enum TipoEndereco {
 	
 	COBRANCA("Cobrança"),
@@ -14,5 +9,9 @@ public enum TipoEndereco {
 	
 	TipoEndereco(String descricao) {
 		this.descricao = descricao;
+	}
+	
+	public String getDescricao() {
+		return this.descricao;
 	}
 }

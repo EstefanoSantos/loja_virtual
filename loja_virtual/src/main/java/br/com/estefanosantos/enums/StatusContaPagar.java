@@ -1,8 +1,5 @@
 package br.com.estefanosantos.enums;
 
-import lombok.Getter;
-
-@Getter
 public enum StatusContaPagar {
 	
 	COBRANCA("Pagar"),
@@ -22,4 +19,9 @@ public enum StatusContaPagar {
 		return this.descricao;
 	}
 
+	public String getDescricao() {
+		return descricao;
+	}
+
+	
 }
