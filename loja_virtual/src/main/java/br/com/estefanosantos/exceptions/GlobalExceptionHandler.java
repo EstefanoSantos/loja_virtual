@@ -41,7 +41,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 				msg.append(objError.getDefaultMessage()).append("\n");			
 			}
 		} else if (ex instanceof HttpMessageNotReadableException) {			
-			msg.append("Corpo da requisição null ou mal formatado.");	
+			msg.append("Corpo da requisição nulo ou mal formatado.");	
 		} else {
 			msg.append(ex.getMessage());
 		}

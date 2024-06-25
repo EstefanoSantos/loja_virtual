@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "pessoa_juridica")
@@ -12,21 +13,27 @@ public class PessoaJuridica extends Pessoa {
 
 	private static final long serialVersionUID = 1L;
 	
+	@NotBlank(message = "Insira um Cnpj.")
 	@Column(nullable = false)
 	private String cnpj;
 	
+	@NotBlank(message = "Insira a Inscrição Estadual.")
 	@Column(nullable = false)
 	private String inscricaoEstadual;
 	
+	@NotBlank(message = "Insira a inscrição Municipal.")
 	@Column(nullable = false)
 	private String inscricaoMunicipal;
 	
+	@NotBlank(message = "Insira o nome fantasia da empresa.")
 	@Column(nullable = false)
 	private String nomeFantasia;
 	
+	@NotBlank(message = "Insira a razão social da empresa.")
 	@Column(nullable = false)
 	private String razaoSocial;
 	
+	@NotBlank(message = "Insira a categoria da empresa.")
 	@Column(nullable = false)
 	private String categoria;
 

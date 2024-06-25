@@ -12,6 +12,7 @@ import br.com.estefanosantos.exceptions.CustomException;
 import br.com.estefanosantos.model.PessoaJuridica;
 import br.com.estefanosantos.service.PessoaJuridicaService;
 import br.com.estefanosantos.util.ValidaCnpj;
+import jakarta.validation.Valid;
 
 @RestController
 public class PessoaJuridicaController {
@@ -21,7 +22,7 @@ public class PessoaJuridicaController {
 	
 	@ResponseBody
 	@PostMapping("/salvarPj")
-	public ResponseEntity<PessoaJuridica> salvarPj(@RequestBody PessoaJuridica pessoaJuridica) throws CustomException {
+	public ResponseEntity<PessoaJuridica> salvarPj(@RequestBody @Valid PessoaJuridica pessoaJuridica) throws CustomException {
 		
 		if (pessoaJuridica == null) {
 			throw new CustomException("Pessoa Jurídica não pode ser NULL.");

@@ -20,6 +20,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -32,15 +36,22 @@ public abstract class Pessoa implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_pessoa")
 	private Long id;
 	
+	@Size(min = 5, message = "Informe o nome completo.")
+	@NotBlank(message = "Insira um nome.")
 	@Column(nullable = false)
 	private String nome;
 	
+	@NotBlank(message = "Insira um -email.")
+	@Email(message = "Informa um e-mail válido.")
 	@Column(nullable = false, unique = true)
 	private String email;
 	
+	@NotBlank(message = "Insira um número para contato.")
+	@Pattern(regexp = "\\d{2,3}\\d{4,5}\\d{4}", message = "Insira um número válido.")
 	@Column(nullable = false)
 	private String contato; 
 	
+	@NotBlank(message = "Informe no mínimo um (1) endereço.")
 	@OneToMany(mappedBy = "pessoa", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Endereco> enderecos = new ArrayList<>();
 	

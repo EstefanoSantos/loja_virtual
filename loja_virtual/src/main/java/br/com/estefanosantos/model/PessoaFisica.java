@@ -8,6 +8,7 @@ import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "pessoa_fisica")
@@ -16,9 +17,11 @@ public class PessoaFisica extends Pessoa {
 
 	private static final long serialVersionUID = 1L;
 	
+	@NotBlank(message = "Insira um cpf.")
 	@Column(nullable = false)
 	private String cpf;
 	
+	@NotBlank(message = "Insira sua data de nascimento.")
 	@Column(nullable = false)
 	@Temporal(TemporalType.DATE)
 	private Date dataNascimento;
