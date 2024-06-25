@@ -15,71 +15,93 @@ import br.com.estefanosantos.repository.UsuarioRepository;
 import br.com.estefanosantos.service.PessoaJuridicaService;
 
 @Service
-public class PessoaJuridicaServiceImpl implements PessoaJuridicaService{
-	
+public class PessoaJuridicaServiceImpl implements PessoaJuridicaService {
+
 	@Autowired
 	private PessoaJuridicaRepository pessoaJuridicaRepository;
-	
+
 	@Autowired
 	private UsuarioRepository usuarioRepository;
-	
+
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
+
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
 	@Autowired
 	private EmailService emailService;
-	
+
 	@Override
-	public PessoaJuridica salvarPessoaJuridica(PessoaJuridica pj) throws CustomException {	
-		
-		for (int i = 0; i < pj.getEnderecos().size(); i++) {
-			pj.getEnderecos().get(i).setEmpresa(pj);
-			pj.getEnderecos().get(i).setPessoa(pj);
+	public PessoaJuridica salvarPessoaJuridica(PessoaJuridica pessoaJuridica) throws CustomException {
+
+		PessoaJuridica pj = pessoaJuridicaRepository.existeCnpj(pessoaJuridica.getCnpj());
+
+		if (pj != null) {
+			throw new CustomException("Cnpj já cadastrado no sistema.");
 		}
-			
-		pj = pessoaJuridicaRepository.save(pj);
-		
+
+		pj = pessoaJuridicaRepository.existeEmail(pessoaJuridica.getEmail());
+
+		if (pj != null) {
+			throw new CustomException("Email já cadastrado no sistema.");
+		}
+
+		pj = pessoaJuridicaRepository.existeInscricaoEstadual(pessoaJuridica.getInscricaoEstadual());
+
+		if (pj != null) {
+			throw new CustomException("Já existe Pessoa Jurídica com inscrição estadual de número "
+					+ pessoaJuridica.getInscricaoEstadual());
+		}
+
+		for (int i = 0; i < pessoaJuridica.getEnderecos().size(); i++) {
+			pessoaJuridica.getEnderecos().get(i).setEmpresa(pessoaJuridica);
+			pessoaJuridica.getEnderecos().get(i).setPessoa(pessoaJuridica);
+		}
+
+		pj = pessoaJuridicaRepository.save(pessoaJuridica);
+
 		Usuario usuario = usuarioRepository.findUserByPessoa(pj.getId(), pj.getEmail());
-		
+
 		if (usuario == null) {
-			
+
 			String constraint = usuarioRepository.checkConstraintRole();
-			
+
 			if (constraint != null) {
 				jdbcTemplate.execute("begin; alter table usuario_role drop constraint " + constraint + "; commit;");
 			}
-			
+
 			usuario = new Usuario();
 			usuario.setDataAttPassword(Calendar.getInstance().getTime());
 			usuario.setEmpresa(pj);
 			usuario.setPessoa(pj);
 			usuario.setLogin(pj.getEmail());
-			
+
 			String senha = "" + Calendar.getInstance().getTimeInMillis();
 			String senhaCript = passwordEncoder.encode(senha);
 			usuario.setPassword(senhaCript);
+
 			
 			usuario = usuarioRepository.save(usuario);
 			usuarioRepository.insereRole(usuario.getId());
+			usuarioRepository.insereRole(usuario.getId(), "ADMIN");
 			
 			StringBuilder mensagem = new StringBuilder();
-			
+
 			mensagem.append("<b>Cadastro efetuado com sucesso!</b><br>");
 			mensagem.append("<b>Login: </b>" + pj.getEmail() + "<br>");
 			mensagem.append("<b>Senha: </b>").append(senha).append("</br>");
 			mensagem.append("Obrigado!");
-			
+
 			try {
-				emailService.sendEmailHtml(pj.getEmail(), "Cadastro efetuado com sucesso na loja virtual", mensagem.toString());
-			} catch(Exception e) {
+				emailService.sendEmailHtml(pj.getEmail(), "Cadastro efetuado com sucesso na loja virtual",
+						mensagem.toString());
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 		}
-		
+
 		return pj;
 	}
 

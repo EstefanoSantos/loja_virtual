@@ -17,4 +17,6 @@ public interface PessoaJuridicaRepository extends JpaRepository<PessoaJuridica, 
 	
 	@Query(value = "select pj from PessoaJuridica pj where pj.email = ?1")
 	PessoaJuridica existeEmail(String email);
+	
+	
 }

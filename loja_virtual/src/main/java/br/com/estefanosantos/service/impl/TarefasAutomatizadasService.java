@@ -22,7 +22,7 @@ public class TarefasAutomatizadasService {
 	private EmailService emailService;
 	
 	
-	//@Scheduled(initialDelay = 2000, fixedDelay = 86400000) utilizado para testar a execução do método
+	//@Scheduled(initialDelay = 2000, fixedDelay = 86400000) //utilizado para testar a execução do método
 	@Scheduled(cron = "0 0 11 * * *")
 	public void notificarUsuarioTrocaSenha() throws UnsupportedEncodingException, MessagingException, InterruptedException {
 		

@@ -41,7 +41,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 				msg.append(objError.getDefaultMessage()).append("\n");			
 			}
 		} else if (ex instanceof HttpMessageNotReadableException) {			
-			msg.append("Não está sendo enviado dados no corpo (BODY) da requisição.");	
+			msg.append("Corpo da requisição null ou mal formatado.");	
 		} else {
 			msg.append(ex.getMessage());
 		}
