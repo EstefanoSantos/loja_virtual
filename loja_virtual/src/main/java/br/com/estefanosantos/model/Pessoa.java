@@ -51,7 +51,6 @@ public abstract class Pessoa implements Serializable {
 	@Column(nullable = false)
 	private String contato; 
 	
-	@NotBlank(message = "Informe no mínimo um (1) endereço.")
 	@OneToMany(mappedBy = "pessoa", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Endereco> enderecos = new ArrayList<>();
 	

@@ -40,13 +40,9 @@ public class PessoaJuridicaController {
 	@PostMapping("/salvarPj")
 	public ResponseEntity<PessoaJuridica> salvarPj(@RequestBody @Valid PessoaJuridica pessoaJuridica) throws CustomException {
 		
-		if (pessoaJuridica == null) {
-			throw new CustomException("Pessoa Jurídica não pode ser NULL.");
-		}
-		
 		if (!ValidaCnpj.isCNPJ(pessoaJuridica.getCnpj())) {
 			throw new CustomException("CNPJ inválido");
-		}		
+		}	
 		
 		PessoaJuridica pj = pessoaJuridicaService.salvarPessoaJuridica(pessoaJuridica);
 		

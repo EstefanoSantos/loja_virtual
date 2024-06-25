@@ -7,11 +7,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import br.com.estefanosantos.dto.CepDto;
 import br.com.estefanosantos.exceptions.CustomException;
 import br.com.estefanosantos.model.PessoaJuridica;
 import br.com.estefanosantos.model.Usuario;
 import br.com.estefanosantos.repository.PessoaJuridicaRepository;
 import br.com.estefanosantos.repository.UsuarioRepository;
+import br.com.estefanosantos.service.ConsumoApis;
 import br.com.estefanosantos.service.PessoaJuridicaService;
 
 @Service
@@ -31,6 +33,10 @@ public class PessoaJuridicaServiceImpl implements PessoaJuridicaService {
 
 	@Autowired
 	private EmailService emailService;
+	
+	@Autowired
+	private ConsumoApis api;
+	
 
 	@Override
 	public PessoaJuridica salvarPessoaJuridica(PessoaJuridica pessoaJuridica) throws CustomException {
@@ -52,6 +58,20 @@ public class PessoaJuridicaServiceImpl implements PessoaJuridicaService {
 		if (pj != null) {
 			throw new CustomException("Já existe Pessoa Jurídica com inscrição estadual de número "
 					+ pessoaJuridica.getInscricaoEstadual());
+		}
+		
+		if (pessoaJuridica.getId() == null || pessoaJuridica.getId() <= 0) {
+			for (int i = 0; i < pessoaJuridica.getEnderecos().size(); i++) {
+				String cepLimpo = pessoaJuridica.getEnderecos().get(i).getCep().replaceAll("[^0-9]", "");
+				CepDto dto = api.consultaCep(cepLimpo);
+				
+				pessoaJuridica.getEnderecos().get(i).setBairro(dto.getBairro());
+				pessoaJuridica.getEnderecos().get(i).setCep(cepLimpo);
+				pessoaJuridica.getEnderecos().get(i).setCidade(dto.getLocalidade());
+				pessoaJuridica.getEnderecos().get(i).setComplemento(dto.getComplemento());
+				pessoaJuridica.getEnderecos().get(i).setRua(dto.getLogradouro());
+				pessoaJuridica.getEnderecos().get(i).setUf(dto.getUf());
+			}
 		}
 
 		for (int i = 0; i < pessoaJuridica.getEnderecos().size(); i++) {
