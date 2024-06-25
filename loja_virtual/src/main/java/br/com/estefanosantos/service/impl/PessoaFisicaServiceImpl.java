@@ -1,6 +1,7 @@
 package br.com.estefanosantos.service.impl;
 
 import java.util.Calendar;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,6 +32,7 @@ public class PessoaFisicaServiceImpl implements PessoaFisicaService {
 
 	@Autowired
 	EmailService emailService;
+	
 
 	@Override
 	public PessoaFisica salvarPessoaFisica(PessoaFisica pessoaFisica) throws CustomException {
@@ -92,6 +94,14 @@ public class PessoaFisicaServiceImpl implements PessoaFisicaService {
 			}
 		}
 		return pf;
+	}
+
+	@Override
+	public List<PessoaFisica> buscarPessoasPorNome(String nomeParcial) {
+		
+		List<PessoaFisica> pessoas = pessoaFisicaRepository.buscarPorNome(nomeParcial);
+		
+		return pessoas;
 	}
 
 }

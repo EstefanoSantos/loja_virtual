@@ -3,6 +3,7 @@ package br.com.estefanosantos;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import br.com.estefanosantos.exceptions.CustomException;
 import br.com.estefanosantos.model.Endereco;
 import br.com.estefanosantos.model.PessoaFisica;
 import br.com.estefanosantos.model.PessoaJuridica;
+import br.com.estefanosantos.repository.PessoaFisicaRepository;
 import br.com.estefanosantos.repository.PessoaJuridicaRepository;
 import junit.framework.TestCase;
 
@@ -31,6 +33,21 @@ public class PessoaJuridicaTest extends TestCase {
 	
 	@Autowired
 	private PessoaFisicaController pessoaFisicaController;
+	
+	@Autowired
+	private PessoaFisicaRepository pessoaFisicaRepository;
+	
+	@Test
+	public void buscarUsuariosPorNome() {
+		
+		String nome = "tot";
+		
+		List<PessoaFisica> nomes = pessoaFisicaRepository.buscarPorNome(nome);
+		
+		for (PessoaFisica pessoa: nomes) {
+			assertTrue(pessoa.getNome().contains(nome));
+		}
+	}
 	
 	@Test
 	public void testCadastroPessoaJurídica() throws CustomException {
