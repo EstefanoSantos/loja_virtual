@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.estefanosantos.dto.CepDto;
+import br.com.estefanosantos.dto.CnpjDto;
 import br.com.estefanosantos.exceptions.CustomException;
 import br.com.estefanosantos.model.PessoaJuridica;
 import br.com.estefanosantos.service.ConsumoApis;
@@ -28,6 +29,14 @@ public class PessoaJuridicaController {
 	
 	@Autowired
 	private ConsumoApis api;
+	
+	@ResponseBody
+	@GetMapping("/consultaCnpj/{cnpj}")
+	public ResponseEntity<CnpjDto> consultaCnpj(@PathVariable("cnpj") String cnpj) {
+		CnpjDto dto = api.consultaCnpj(cnpj);
+		
+		return new ResponseEntity<CnpjDto>(dto, HttpStatus.OK);
+	}
 	
 	@ResponseBody
 	@GetMapping("/consultaCep/{cep}")
