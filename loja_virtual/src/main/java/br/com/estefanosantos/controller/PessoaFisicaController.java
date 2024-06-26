@@ -16,6 +16,7 @@ import br.com.estefanosantos.dto.PessoaFisicaRequestDto;
 import br.com.estefanosantos.exceptions.CustomException;
 import br.com.estefanosantos.model.PessoaFisica;
 import br.com.estefanosantos.service.PessoaFisicaService;
+import br.com.estefanosantos.service.impl.ContagemAcessoApiService;
 import br.com.estefanosantos.util.ValidaCpf;
 import jakarta.validation.Valid;
 
@@ -23,7 +24,10 @@ import jakarta.validation.Valid;
 public class PessoaFisicaController {
 	
 	@Autowired
-	PessoaFisicaService pessoaFisicaService;
+	private PessoaFisicaService pessoaFisicaService;
+	
+	@Autowired
+	private ContagemAcessoApiService contagemApiService;
 	
 	@ResponseBody
 	@PostMapping("/salvarPf")
@@ -49,7 +53,7 @@ public class PessoaFisicaController {
 		return new ResponseEntity<>(pf, HttpStatus.OK);
 	}
 	
-	@GetMapping("/buscarPfPorNome/{nome}")
+	@GetMapping("/buscarPfNome/{nome}")
 	public ResponseEntity<List<PessoaFisica>> buscarPfPorNome(@PathVariable("nome") String nome) throws CustomException {
 		
 		if (nome == null) {
@@ -57,6 +61,8 @@ public class PessoaFisicaController {
 		}
 		
 		List<PessoaFisica> pessoas = pessoaFisicaService.buscarPessoasPorNome(nome);
+		
+		contagemApiService.atualizarContagemBuscaPfNome();
 		
 		return new ResponseEntity<>(pessoas, HttpStatus.OK);
 	}
@@ -69,6 +75,8 @@ public class PessoaFisicaController {
 		}
 		
 		PessoaFisica pf = pessoaFisicaService.buscarPorCpf(cpf);
+		
+		contagemApiService.atualizarContagemBuscaPfCpf();
 		
 		return new ResponseEntity<>(pf, HttpStatus.OK);
 	}
