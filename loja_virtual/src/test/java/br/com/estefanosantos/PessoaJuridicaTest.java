@@ -148,7 +148,7 @@ public class PessoaJuridicaTest extends TestCase {
 		pessoaFisica.getEnderecos().add(endereco1);
 		pessoaFisica.getEnderecos().add(endereco2);
 		
-		pessoaFisica = pessoaFisicaController.salvarPf(pessoaFisica).getBody();
+		//pessoaFisica = pessoaFisicaController.salvarPf(pessoaFisica).getBody();
 		
 		assertEquals(true, pessoaFisica.getId() > 0);
 

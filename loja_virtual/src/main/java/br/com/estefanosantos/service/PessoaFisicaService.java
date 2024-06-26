@@ -7,7 +7,9 @@ import br.com.estefanosantos.model.PessoaFisica;
 
 public interface PessoaFisicaService {
 	
-	PessoaFisica salvarPessoaFisica(PessoaFisica pessoaFisica) throws CustomException;
+	PessoaFisica salvarPessoaFisica(PessoaFisica pessoaFisica, String cnpj) throws CustomException;
 	
 	List<PessoaFisica> buscarPessoasPorNome(String nomeParcial);
+	
+	PessoaFisica buscarPorCpf(String cpf) throws CustomException;
 }

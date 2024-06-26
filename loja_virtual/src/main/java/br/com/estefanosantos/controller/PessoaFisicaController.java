@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.estefanosantos.dto.PessoaFisicaRequestDto;
 import br.com.estefanosantos.exceptions.CustomException;
 import br.com.estefanosantos.model.PessoaFisica;
 import br.com.estefanosantos.service.PessoaFisicaService;
 import br.com.estefanosantos.util.ValidaCpf;
+import jakarta.validation.Valid;
 
 @RestController
 public class PessoaFisicaController {
@@ -25,32 +27,50 @@ public class PessoaFisicaController {
 	
 	@ResponseBody
 	@PostMapping("/salvarPf")
-	public ResponseEntity<PessoaFisica> salvarPf(@RequestBody PessoaFisica pessoaFisica) throws CustomException {
+	public ResponseEntity<PessoaFisica> salvarPf(@RequestBody @Valid PessoaFisicaRequestDto pessoaFisica) throws CustomException {
 		
-		if (pessoaFisica.getId() != null) {
+		PessoaFisica pf = pessoaFisica.getPessoaFisica();
+		String cnpj = pessoaFisica.getCnpj();
+		
+		if (pf.getId() != null) {
 			throw new CustomException("Corpo da requisição não pode possuir id.");
 		}
 		
-		if (!ValidaCpf.isCPF(pessoaFisica.getCpf())) {
+		if (!ValidaCpf.isCPF(pf.getCpf())) {
 			throw new CustomException("CPF inválido");
 		}
 		
-		PessoaFisica pf = pessoaFisicaService.salvarPessoaFisica(pessoaFisica);
+		if (cnpj == null) {
+			throw new CustomException("Cnpj ausente na requisição.");
+		}
+		
+		pf = pessoaFisicaService.salvarPessoaFisica(pf, cnpj);
 		
 		return new ResponseEntity<>(pf, HttpStatus.OK);
 	}
 	
-	@GetMapping("/pessoas/{nomeParcial}")
-	public ResponseEntity<List<PessoaFisica>> buscarPessoasPorNome(@PathVariable("nomeParcial") String nomeParcial) throws CustomException {
+	@GetMapping("/buscarPfPorNome/{nome}")
+	public ResponseEntity<List<PessoaFisica>> buscarPfPorNome(@PathVariable("nome") String nome) throws CustomException {
 		
-		if (nomeParcial == null) {
+		if (nome == null) {
 			throw new CustomException("Variável de caminho ausente.");
 		}
 		
-		List<PessoaFisica> pessoas = pessoaFisicaService.buscarPessoasPorNome(nomeParcial);
+		List<PessoaFisica> pessoas = pessoaFisicaService.buscarPessoasPorNome(nome);
 		
 		return new ResponseEntity<>(pessoas, HttpStatus.OK);
 	}
 	
+	@ResponseBody
+	@GetMapping("/buscarPorCpf/{cpf}")
+	public ResponseEntity<PessoaFisica> buscarPorCpf(@PathVariable("cpf") String cpf) throws CustomException {
+		if (cpf == null) {
+			throw new CustomException("Variável de caminho ausente.");
+		}
+		
+		PessoaFisica pf = pessoaFisicaService.buscarPorCpf(cpf);
+		
+		return new ResponseEntity<>(pf, HttpStatus.OK);
+	}
 
 }

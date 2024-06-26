@@ -1,5 +1,7 @@
 package br.com.estefanosantos.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +47,41 @@ public class PessoaJuridicaController {
 		}	
 		
 		PessoaJuridica pj = pessoaJuridicaService.salvarPessoaJuridica(pessoaJuridica);
+		
+		return new ResponseEntity<>(pj, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping("/pessoasPj/{nome}")
+	public ResponseEntity<List<PessoaJuridica>> buscarPorNome(@PathVariable("nome") String nome) throws CustomException {
+		if (nome == null) {
+			throw new CustomException("Path variable vazia.");
+		}
+		
+		List<PessoaJuridica> pessoas = pessoaJuridicaService.buscarPorNome(nome);
+		
+		return new ResponseEntity<>(pessoas, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping("/buscarPorCnpj/{cnpj}") 
+	public ResponseEntity<PessoaJuridica> buscarPorCnpj(@PathVariable("cnpj") String cnpj) throws CustomException {
+		if (cnpj == null) {
+			throw new CustomException("Path variable vazia.");
+		}
+		PessoaJuridica pj = pessoaJuridicaService.buscarPorCnpj(cnpj);
+		
+		return new ResponseEntity<>(pj, HttpStatus.OK);
+	
+	}
+	
+	@ResponseBody
+	@GetMapping("/buscarPorIE/{IE}")
+	public ResponseEntity<PessoaJuridica> buscarPorIE(@PathVariable("IE") String inscricao) throws CustomException {
+		if (inscricao == null) {
+			throw new CustomException("Path variable vazia.");
+		}
+		PessoaJuridica pj = pessoaJuridicaService.buscarPorInscricaoEstadual(inscricao);
 		
 		return new ResponseEntity<>(pj, HttpStatus.OK);
 	}

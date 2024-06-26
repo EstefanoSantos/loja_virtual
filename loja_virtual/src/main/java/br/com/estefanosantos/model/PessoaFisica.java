@@ -9,6 +9,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "pessoa_fisica")
@@ -21,7 +22,7 @@ public class PessoaFisica extends Pessoa {
 	@Column(nullable = false)
 	private String cpf;
 	
-	@NotBlank(message = "Insira sua data de nascimento.")
+	@NotNull(message = "Insira sua data de nascimento.")
 	@Column(nullable = false)
 	@Temporal(TemporalType.DATE)
 	private Date dataNascimento;

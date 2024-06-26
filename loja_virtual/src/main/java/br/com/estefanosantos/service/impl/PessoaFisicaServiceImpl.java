@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 
 import br.com.estefanosantos.exceptions.CustomException;
 import br.com.estefanosantos.model.PessoaFisica;
+import br.com.estefanosantos.model.PessoaJuridica;
 import br.com.estefanosantos.model.Usuario;
 import br.com.estefanosantos.repository.PessoaFisicaRepository;
+import br.com.estefanosantos.repository.PessoaJuridicaRepository;
 import br.com.estefanosantos.repository.UsuarioRepository;
 import br.com.estefanosantos.service.PessoaFisicaService;
 
@@ -20,6 +22,9 @@ public class PessoaFisicaServiceImpl implements PessoaFisicaService {
 
 	@Autowired
 	PessoaFisicaRepository pessoaFisicaRepository;
+	
+	@Autowired
+	PessoaJuridicaRepository pessoaJuridicaRepository;
 
 	@Autowired
 	UsuarioRepository usuarioRepository;
@@ -35,9 +40,17 @@ public class PessoaFisicaServiceImpl implements PessoaFisicaService {
 	
 
 	@Override
-	public PessoaFisica salvarPessoaFisica(PessoaFisica pessoaFisica) throws CustomException {
+	public PessoaFisica salvarPessoaFisica(PessoaFisica pessoaFisica, String cnpj) throws CustomException {
+		
+		PessoaJuridica pj = pessoaJuridicaRepository.existeCnpj(cnpj);
+		
+		if (pj == null) {
+			throw new CustomException("Nenhum cnpj encontrado no cadastro.");
+		}
+		
+		String cpfLimpo = pessoaFisica.getCpf().replaceAll("[^0-9]", "");
 
-		PessoaFisica pf = pessoaFisicaRepository.existeCpf(pessoaFisica.getCpf());
+		PessoaFisica pf = pessoaFisicaRepository.existeCpf(cpfLimpo);
 
 		if (pf != null) {
 			throw new CustomException("CPF já cadastrado no sistema.");
@@ -48,12 +61,17 @@ public class PessoaFisicaServiceImpl implements PessoaFisicaService {
 		if (pf != null) {
 			throw new CustomException("Email já cadastrado no sistema.");
 		}
+		
+		pf = pessoaFisica;
+		pf.setCpf(cpfLimpo);
+		pf.setEmpresa(pj);
 
 		for (int i = 0; i < pessoaFisica.getEnderecos().size(); i++) {
-			pessoaFisica.getEnderecos().get(i).setPessoa(pessoaFisica);
+			pf.getEnderecos().get(i).setPessoa(pf);
+			pf.getEnderecos().get(i).setEmpresa(pj);
 		}
-
-		pf = pessoaFisicaRepository.save(pessoaFisica);
+		
+		pf = pessoaFisicaRepository.save(pf);
 
 		Usuario usuario = usuarioRepository.findUserByPessoa(pf.getId(), pf.getEmail());
 
@@ -102,6 +120,17 @@ public class PessoaFisicaServiceImpl implements PessoaFisicaService {
 		List<PessoaFisica> pessoas = pessoaFisicaRepository.buscarPorNome(nomeParcial);
 		
 		return pessoas;
+	}
+
+	@Override
+	public PessoaFisica buscarPorCpf(String cpf) throws CustomException {
+		PessoaFisica pf = pessoaFisicaRepository.existeCpf(cpf);
+		
+		if (pf == null) {
+			throw new CustomException("Cpf está errado ou não existe cadastro no sistema");
+		}
+		
+		return pf;
 	}
 
 }

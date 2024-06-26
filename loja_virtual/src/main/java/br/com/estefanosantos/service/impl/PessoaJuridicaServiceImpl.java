@@ -1,6 +1,7 @@
 package br.com.estefanosantos.service.impl;
 
 import java.util.Calendar;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -123,6 +124,26 @@ public class PessoaJuridicaServiceImpl implements PessoaJuridicaService {
 		}
 
 		return pj;
+	}
+
+
+	@Override
+	public List<PessoaJuridica> buscarPorNome(String nome) {
+		List<PessoaJuridica> pessoas = pessoaJuridicaRepository.buscarPorNome(nome);
+		
+		return pessoas;
+	}
+
+
+	@Override
+	public PessoaJuridica buscarPorCnpj(String cnpj) {
+		return pessoaJuridicaRepository.existeCnpj(cnpj);
+	}
+
+
+	@Override
+	public PessoaJuridica buscarPorInscricaoEstadual(String inscricao) {
+		return pessoaJuridicaRepository.existeInscricaoEstadual(inscricao);
 	}
 
 }
