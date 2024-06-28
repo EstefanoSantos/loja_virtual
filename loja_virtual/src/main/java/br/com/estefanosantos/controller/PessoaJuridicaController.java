@@ -51,9 +51,17 @@ public class PessoaJuridicaController {
 	@PostMapping("/salvarPj")
 	public ResponseEntity<PessoaJuridica> salvarPj(@RequestBody @Valid PessoaJuridica pessoaJuridica) throws CustomException {
 		
+		if (pessoaJuridica == null) {
+			throw new CustomException("Corpo da requisição vazio.");
+		}
+		
 		if (!ValidaCnpj.isCNPJ(pessoaJuridica.getCnpj())) {
 			throw new CustomException("CNPJ inválido");
 		}	
+		
+		if (pessoaJuridica.getTipoPessoa() == null) {
+			throw new CustomException("Informe se é pessoa jurídica ou fornecedora");
+		}
 		
 		PessoaJuridica pj = pessoaJuridicaService.salvarPessoaJuridica(pessoaJuridica);
 		

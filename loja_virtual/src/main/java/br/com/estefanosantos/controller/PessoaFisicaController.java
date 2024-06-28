@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.estefanosantos.dto.PessoaFisicaRequestDto;
+import br.com.estefanosantos.enums.TipoPessoa;
 import br.com.estefanosantos.exceptions.CustomException;
 import br.com.estefanosantos.model.PessoaFisica;
 import br.com.estefanosantos.service.PessoaFisicaService;
@@ -33,9 +34,13 @@ public class PessoaFisicaController {
 	@PostMapping("/salvarPf")
 	public ResponseEntity<PessoaFisica> salvarPf(@RequestBody @Valid PessoaFisicaRequestDto pessoaFisica) throws CustomException {
 		
+		if (pessoaFisica == null) {
+			throw new CustomException("Corpo da requisição vazio.");
+		}
+		
 		PessoaFisica pf = pessoaFisica.getPessoaFisica();
 		String cnpj = pessoaFisica.getCnpj();
-		
+				
 		if (pf.getId() != null) {
 			throw new CustomException("Corpo da requisição não pode possuir id.");
 		}
@@ -46,6 +51,10 @@ public class PessoaFisicaController {
 		
 		if (cnpj == null) {
 			throw new CustomException("Cnpj ausente na requisição.");
+		}
+		
+		if (pf.getTipoPessoa() == null) {
+			pf.setTipoPessoa(TipoPessoa.FISICA.name());
 		}
 		
 		pf = pessoaFisicaService.salvarPessoaFisica(pf, cnpj);
