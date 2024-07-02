@@ -81,14 +81,14 @@ public class MarcaProdutoController {
 	}
 	
 	@ResponseBody
-	@GetMapping("/buscarMarcaProduto/{nome}")
+	@GetMapping("/buscarMarcaProdutoNome/{nome}")
 	public ResponseEntity<List<MarcaProduto>> buscarMarcasNome(@PathVariable("nome") String nome) throws CustomException {
 		
 		if (nome == null) {
 			throw new CustomException("Informe o nome do produto");
 		}
 		
-		List<MarcaProduto> marcas = marcaProdutoService.buscarMarcaNome(nome);
+		List<MarcaProduto> marcas = marcaProdutoService.buscarMarcaNome(nome.toUpperCase());
 		
 		return new ResponseEntity<List<MarcaProduto>>(marcas, HttpStatus.OK);
 	}

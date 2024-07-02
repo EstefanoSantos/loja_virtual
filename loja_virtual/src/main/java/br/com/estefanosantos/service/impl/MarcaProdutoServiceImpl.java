@@ -20,11 +20,11 @@ public class MarcaProdutoServiceImpl implements MarcaProdutoService {
 	public void salvarMarcaProduto(MarcaProduto marcaProduto) throws CustomException {
 		
 		List<MarcaProduto> produtos = marcaProdutoRepository.
-				buscarMarcaNome(marcaProduto.getMarcaNome().toUpperCase(), marcaProduto.getEmpresa().getId());
+				buscarMarcaNome(marcaProduto.getMarcaNome().toUpperCase());
 		
 		if (!produtos.isEmpty()) {
 			throw new CustomException("Já existe cadastro de marca com o nome "
-		+ marcaProduto.getMarcaNome() + " para a empresa de id " + marcaProduto.getEmpresa().getId());
+		+ marcaProduto.getMarcaNome());
 		}
 		
 		marcaProdutoRepository.save(marcaProduto);

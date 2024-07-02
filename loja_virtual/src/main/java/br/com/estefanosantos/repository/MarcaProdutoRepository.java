@@ -12,6 +12,4 @@ public interface MarcaProdutoRepository extends JpaRepository<MarcaProduto, Long
 	@Query("select m from MarcaProduto m where upper(m.marcaNome) like %?1%")
 	List<MarcaProduto> buscarMarcaNome(String nome);
 	
-	@Query("select m from MarcaProduto m where upper(m.marcaNome) like %?1% and m.empresa.id = ?2")
-	List<MarcaProduto> buscarMarcaNome(String nome, Long empresaId);
 }
