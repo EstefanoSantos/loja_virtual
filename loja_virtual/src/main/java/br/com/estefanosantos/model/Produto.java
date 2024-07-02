@@ -98,6 +98,11 @@ public class Produto implements Serializable {
 	@JoinColumn(name = "marca_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "marca_produto_id_fk"))
 	private MarcaProduto marcaProduto;
 	
+	@NotNull(message = "A nota do produto deve ser informada.")
+	@ManyToOne(targetEntity = NotaItemProduto.class)
+	@JoinColumn(name = "nota_item_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "nota_item_produto_id_fk"))
+	private NotaItemProduto notaItemProduto;
+	
 	
 	@Override
 	public int hashCode() {
