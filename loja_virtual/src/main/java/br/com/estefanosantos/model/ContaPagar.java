@@ -21,6 +21,8 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "conta_pagar")
@@ -33,14 +35,18 @@ public class ContaPagar implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_conta_pagar")
 	private Long id;
 	
+	@NotBlank(message = "Informe a descrição da conta a ser paga.")
+	@NotNull(message = "Informe a descrição da conta a ser paga.")
 	@Column(nullable = false)
 	private String descricao;
 	
+	@NotNull(message = "Informe o valor total da conta a ser paga.")
 	@Column(nullable = false)
 	private BigDecimal valorTotal;
 	
 	private BigDecimal valorDesconto;
 	
+	@NotNull(message = "Informe a data de vencimento da conta a ser paga.")
 	@Column(nullable = false)
 	@Temporal(TemporalType.DATE)
 	private Date dataVencimento;
@@ -48,21 +54,25 @@ public class ContaPagar implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date dataPagamento;
 	
+	@NotNull(message = "Informe o status da conta a ser paga.")
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private StatusContaPagar statusContaPagar;
 	
-	@ManyToOne(targetEntity = Pessoa.class)
+	@NotNull(message = "Pessoa responsável deve ser informada.")
+	@ManyToOne(targetEntity = PessoaFisica.class)
 	@JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
-	private Pessoa pessoa;
+	private PessoaFisica pessoa;
 	
-	@ManyToOne(targetEntity = Pessoa.class)
+	@NotNull(message = "Empresa responsável deve ser informada.")
+	@ManyToOne(targetEntity = PessoaJuridica.class)
 	@JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-	private Pessoa empresa;
+	private PessoaJuridica empresa;
 	
-	@ManyToOne(targetEntity = Pessoa.class)
+	@NotNull(message = "Pessoa Fornecedora responsável deve ser informada.")
+	@ManyToOne(targetEntity = PessoaJuridica.class)
 	@JoinColumn(name = "pessoa_fornecedora_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fornecedora_fk"))
-	private Pessoa pessoaFornecedora;
+	private PessoaJuridica pessoaFornecedora;
 	
 	@Override
 	public int hashCode() {
@@ -137,27 +147,27 @@ public class ContaPagar implements Serializable {
 		this.statusContaPagar = statusContaPagar;
 	}
 
-	public Pessoa getPessoa() {
+	public PessoaFisica getPessoa() {
 		return pessoa;
 	}
 
-	public void setPessoa(Pessoa pessoa) {
+	public void setPessoa(PessoaFisica pessoa) {
 		this.pessoa = pessoa;
 	}
 
-	public Pessoa getEmpresa() {
+	public PessoaJuridica getEmpresa() {
 		return empresa;
 	}
 
-	public void setEmpresa(Pessoa empresa) {
+	public void setEmpresa(PessoaJuridica empresa) {
 		this.empresa = empresa;
 	}
 
-	public Pessoa getPessoaFornecedora() {
+	public PessoaJuridica getPessoaFornecedora() {
 		return pessoaFornecedora;
 	}
 
-	public void setPessoaFornecedora(Pessoa pessoaFornecedora) {
+	public void setPessoaFornecedora(PessoaJuridica pessoaFornecedora) {
 		this.pessoaFornecedora = pessoaFornecedora;
 	}
 	
