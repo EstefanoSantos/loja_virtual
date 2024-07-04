@@ -17,6 +17,8 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "nota_fiscal_compra")
@@ -29,34 +31,44 @@ public class NotaFiscalCompra implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_nota_fiscal_compra")
 	private Long id;
 	
+	@NotBlank(message = "Informe o numero da nota fiscal")
+	@NotNull(message = "Informe o numero da nota fiscal")
 	@Column(nullable = false)
 	private String numeroNota;
 	
+	@NotBlank(message = "Informe a serie da nota fiscal")
+	@NotNull(message = "Informe a serie da nota fiscal")
 	@Column(nullable = false)
 	private String serieNota;
 	
 	private String descricaoObs;
 	
+	@NotNull(message = "Informe o valor total da compra")
 	@Column(nullable = false)
 	private BigDecimal valorTotal;
 	
 	private BigDecimal valorDesconto;
 	
+	@NotNull(message = "Informe o valor do icms.")
 	@Column(nullable = false)
 	private BigDecimal valorIcms;
 	
+	@NotNull(message = "Informe a data da compra.")
 	@Column(nullable = false)
 	@Temporal(TemporalType.DATE)
 	private Date dataCompra;
 	
-	@ManyToOne(targetEntity = Pessoa.class)
+	@NotNull(message = "Informe a pessoa devedora.")
+	@ManyToOne(targetEntity = PessoaJuridica.class)
 	@JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
-	private Pessoa pessoa;
+	private PessoaJuridica pessoa;
 	
-	@ManyToOne(targetEntity = Pessoa.class)
+	@NotNull(message = "Informe a empresa da venda.")
+	@ManyToOne(targetEntity = PessoaJuridica.class)
 	@JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-	private Pessoa empresa;
+	private PessoaJuridica empresa;
 	
+	@NotNull(message = "Informe o id da conta a ser paga.")
 	@ManyToOne
 	@JoinColumn(name = "conta_pagar_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "contar_pagar_fk"))
 	private ContaPagar contaPagar;
@@ -125,19 +137,19 @@ public class NotaFiscalCompra implements Serializable {
 		this.dataCompra = dataCompra;
 	}
 
-	public Pessoa getPessoa() {
+	public PessoaJuridica getPessoa() {
 		return pessoa;
 	}
 
-	public void setPessoa(Pessoa pessoa) {
+	public void setPessoa(PessoaJuridica pessoa) {
 		this.pessoa = pessoa;
 	}
 
-	public Pessoa getEmpresa() {
+	public PessoaJuridica getEmpresa() {
 		return empresa;
 	}
 
-	public void setEmpresa(Pessoa empresa) {
+	public void setEmpresa(PessoaJuridica empresa) {
 		this.empresa = empresa;
 	}
 
