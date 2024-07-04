@@ -4,9 +4,13 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.estefanosantos.model.ContaPagar;
 
+@Repository
+@Transactional
 public interface ContaPagarRepository extends JpaRepository<ContaPagar, Long> {
 	
 	@Query(value = "select c from ContaPagar c where c.id = ?1")

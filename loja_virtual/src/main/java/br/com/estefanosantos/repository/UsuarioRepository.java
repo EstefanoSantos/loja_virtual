@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.estefanosantos.model.Usuario;
 
 @Repository
+@Transactional
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	
 

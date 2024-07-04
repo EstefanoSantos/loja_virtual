@@ -5,10 +5,12 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.estefanosantos.model.PessoaJuridica;
 
 @Repository
+@Transactional
 public interface PessoaJuridicaRepository extends JpaRepository<PessoaJuridica, Long> {
 	
 	@Query("select pj from PessoaJuridica pj where upper(trim(pj.nome)) like upper(concat('%', ?1, '%'))")
