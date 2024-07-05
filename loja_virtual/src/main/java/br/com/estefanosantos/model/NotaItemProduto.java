@@ -14,6 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "nota_item_produto")
@@ -26,22 +27,26 @@ public class NotaItemProduto implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_nota_item_produto")
 	private Long id;
 	
+	@NotNull(message = "Informe a quantidade do produto.")
 	@Column(nullable = false)
 	private double quantidade;
 	
+	@NotNull(message = "Informe o produto.")
 	@ManyToOne
 	@JoinColumn(name = "produto_id", nullable = false,
 			foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "produto_fk"))
 	private Produto produto;
 	
+	@NotNull(message = "Informe a nota fiscal da compra.")
 	@ManyToOne
 	@JoinColumn(name = "nota_fiscal_compra_id", nullable = false,
 			foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "nota_fiscal_compra_fk"))
 	private NotaFiscalCompra notaFiscalCompra;
 	
-	@ManyToOne(targetEntity = Pessoa.class)
+	@NotNull(message = "Informe a empresa.")
+	@ManyToOne(targetEntity = PessoaJuridica.class)
 	@JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-	private Pessoa empresa;
+	private PessoaJuridica empresa;
 
 	@Override
 	public int hashCode() {
@@ -92,11 +97,11 @@ public class NotaItemProduto implements Serializable {
 		this.notaFiscalCompra = notaFiscalCompra;
 	}
 
-	public Pessoa getEmpresa() {
+	public PessoaJuridica getEmpresa() {
 		return empresa;
 	}
 
-	public void setEmpresa(Pessoa empresa) {
+	public void setEmpresa(PessoaJuridica empresa) {
 		this.empresa = empresa;
 	}
 	
