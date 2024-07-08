@@ -2,17 +2,22 @@ package br.com.estefanosantos.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -97,6 +102,9 @@ public class Produto implements Serializable {
 	@ManyToOne(targetEntity = MarcaProduto.class)
 	@JoinColumn(name = "marca_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "marca_produto_id_fk"))
 	private MarcaProduto marcaProduto;
+	
+	@OneToMany(mappedBy = "produto", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<ImagemProduto> imagens = new ArrayList<ImagemProduto>();
 	
 	@Override
 	public int hashCode() {
@@ -257,6 +265,14 @@ public class Produto implements Serializable {
 	
 	public MarcaProduto getMarcaProduto() {
 		return marcaProduto;
+	}
+	
+	public void setImagens(List<ImagemProduto> imagens) {
+		this.imagens = imagens;
+	}
+	
+	public List<ImagemProduto> getImagens() {
+		return imagens;
 	}
 	
 	

@@ -1,5 +1,6 @@
 package br.com.estefanosantos.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class ProdutoController {
 	
 	@ResponseBody
 	@PostMapping("/salvarProduto")
-	public ResponseEntity<String> salvarProduto(@RequestBody @Valid Produto produto) throws CustomException {
+	public ResponseEntity<String> salvarProduto(@RequestBody @Valid Produto produto) throws CustomException, IOException {
 		
 		if (produto == null) {
 			throw new CustomException("Corpo da requisição vazio.");
@@ -36,17 +37,41 @@ public class ProdutoController {
 			throw new CustomException("Corpo da requisição não pode possuir id.");
 		}
 		
-		if (produto.getEmpresa() == null || produto.getEmpresa().getId() <= 0) {
-			throw new CustomException("Informe o fornecedor do produto.");
+		if (produto.getNome().length() < 10) {
+			throw new CustomException("Nome do produto deve possuir no mínimo 10 letras.");
 		}
 		
-		if (produto.getCategoriaProduto() == null || produto.getCategoriaProduto().getId() <= 0) {
+		if (produto.getTipoUnidade() == null || produto.getTipoUnidade().trim().isEmpty()) {
+			throw new CustomException("Informe o tipo de unidade do produto.");
+		}
+		
+		if (produto.getQuantidadeEstoque() < 1) {
+			throw new CustomException("Informe a quantidade em estoque do produto.");
+		}
+			
+		if (produto.getEmpresa() == null || produto.getEmpresa().getId() == null || produto.getEmpresa().getId() <= 0) {
+			throw new CustomException("Informe a empresa responsável.");
+		}
+		
+		if (produto.getCategoriaProduto() == null || produto.getCategoriaProduto().getId() == null || produto.getCategoriaProduto().getId() <= 0) {
 			throw new CustomException("Informe a categoria do produto.");
 		}
 		
-		if (produto.getMarcaProduto() == null || produto.getMarcaProduto().getId() <= 0) {
+		if (produto.getMarcaProduto() == null || produto.getMarcaProduto().getId() == null || produto.getMarcaProduto().getId() <= 0) {
 			throw new CustomException("Informe a marca do produto");
 		}
+		
+		if (produto.getImagens() == null || produto.getImagens().isEmpty() || produto.getImagens().size() <= 0) {
+			throw new CustomException("Deve ser enviada imagens do produto.");
+		}
+		
+		if (produto.getImagens().size() < 3) {
+			throw new CustomException("Deve ser enviado no mínimo 3 imagens");
+		}
+		
+		if (produto.getImagens().size() > 6) {
+			throw new CustomException("O máximo de imagens permitidas é 6.");
+		}	
 		
 		produtoService.salvarProduto(produto);
 		
