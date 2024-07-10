@@ -14,6 +14,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "avaliacao_produto")
@@ -28,16 +31,19 @@ public class AvaliacaoProduto implements Serializable {
 	
 	private String descricao;
 	
+	@Min(value = 1, message = "Valor mínimo deve ser 1 (um).")
+	@Max(value = 5, message = "Valor máximo deve ser 5 (cinco).")
+	@NotNull(message = "Informe a nota da avaliação do produto.")
 	@Column(nullable = false)
 	private Integer nota;
 	
-	@ManyToOne(targetEntity = Pessoa.class)
-	@JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_id"))
-	private Pessoa pessoa;
+	@ManyToOne(targetEntity = PessoaFisica.class)
+	@JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_id_fk"))
+	private PessoaFisica pessoa;
 	
-	@ManyToOne(targetEntity = Pessoa.class)
+	@ManyToOne(targetEntity = PessoaJuridica.class)
 	@JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-	private Pessoa empresa;
+	private PessoaJuridica empresa;
 	
 	@ManyToOne
 	@JoinColumn(name = "produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "produto_fk"))
@@ -67,19 +73,19 @@ public class AvaliacaoProduto implements Serializable {
 		this.nota = nota;
 	}
 
-	public Pessoa getPessoa() {
+	public PessoaFisica getPessoa() {
 		return pessoa;
 	}
 
-	public void setPessoa(Pessoa pessoa) {
+	public void setPessoa(PessoaFisica pessoa) {
 		this.pessoa = pessoa;
 	}
 
-	public Pessoa getEmpresa() {
+	public PessoaJuridica getEmpresa() {
 		return empresa;
 	}
 
-	public void setEmpresa(Pessoa empresa) {
+	public void setEmpresa(PessoaJuridica empresa) {
 		this.empresa = empresa;
 	}
 
