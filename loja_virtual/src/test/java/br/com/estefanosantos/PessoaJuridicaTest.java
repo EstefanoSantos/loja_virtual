@@ -71,7 +71,7 @@ public class PessoaJuridicaTest extends TestCase {
 		endereco1.setComplemento("Caza Laranja");
 		endereco1.setEmpresa(pessoaJuridica);
 		endereco1.setNumero("1234");
-		endereco1.setPessoa(pessoaJuridica);
+		//endereco1.setPessoa(pessoaJuridica);
 		endereco1.setRua("Rua Caimbé");
 		endereco1.setTipoEndereco(TipoEndereco.COBRANCA);
 		endereco1.setUf("RR");
@@ -83,7 +83,7 @@ public class PessoaJuridicaTest extends TestCase {
 		endereco2.setComplemento("Caza Cinza");
 		endereco2.setEmpresa(pessoaJuridica);
 		endereco2.setNumero("2345");
-		endereco2.setPessoa(pessoaJuridica);
+		//endereco2.setPessoa(pessoaJuridica);
 		endereco2.setRua("Rua Marajós");
 		endereco2.setTipoEndereco(TipoEndereco.ENTREGA);
 		endereco2.setUf("RR");

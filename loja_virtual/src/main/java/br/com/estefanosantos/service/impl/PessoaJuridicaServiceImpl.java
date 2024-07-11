@@ -77,7 +77,6 @@ public class PessoaJuridicaServiceImpl implements PessoaJuridicaService {
 
 		for (int i = 0; i < pessoaJuridica.getEnderecos().size(); i++) {
 			pessoaJuridica.getEnderecos().get(i).setEmpresa(pessoaJuridica);
-			pessoaJuridica.getEnderecos().get(i).setPessoa(pessoaJuridica);
 		}
 
 		pj = pessoaJuridicaRepository.save(pessoaJuridica);
