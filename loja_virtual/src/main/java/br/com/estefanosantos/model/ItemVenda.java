@@ -21,25 +21,65 @@ import jakarta.persistence.Table;
 public class ItemVenda implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_item_venda")
 	private Long id;
-	
+
 	@Column(nullable = false)
 	private Double quantidade;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "produto_fk"))
 	private Produto produto;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "venda_compra_loja_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "venda_compra_loja_fk"))
 	private VendaCompraLoja vendaCompraLoja;
-	
+
 	@ManyToOne(targetEntity = Pessoa.class)
 	@JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
 	private Pessoa empresa;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Double getQuantidade() {
+		return quantidade;
+	}
+
+	public void setQuantidade(Double quantidade) {
+		this.quantidade = quantidade;
+	}
+
+	public Produto getProduto() {
+		return produto;
+	}
+
+	public void setProduto(Produto produto) {
+		this.produto = produto;
+	}
+
+	public VendaCompraLoja getVendaCompraLoja() {
+		return vendaCompraLoja;
+	}
+
+	public void setVendaCompraLoja(VendaCompraLoja vendaCompraLoja) {
+		this.vendaCompraLoja = vendaCompraLoja;
+	}
+
+	public Pessoa getEmpresa() {
+		return empresa;
+	}
+
+	public void setEmpresa(Pessoa empresa) {
+		this.empresa = empresa;
+	}
 
 	@Override
 	public int hashCode() {
@@ -58,5 +98,4 @@ public class ItemVenda implements Serializable {
 		return Objects.equals(id, other.id);
 	}
 
-	
 }

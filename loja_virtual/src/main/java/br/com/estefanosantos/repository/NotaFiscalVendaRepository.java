@@ -10,8 +10,4 @@ import br.com.estefanosantos.model.NotaFiscalVenda;
 @Transactional
 public interface NotaFiscalVendaRepository  extends JpaRepository<NotaFiscalVenda, Long>{
 	
-	@Modifying
-	@Transactional
-	@Query(nativeQuery = true, value = "insert into nota_fiscal_venda (venda_compra_loja_id) values (?1)")
-	void insertVendaCompraLoja(Long id);
 }

@@ -3,8 +3,10 @@ package br.com.estefanosantos.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.estefanosantos.dto.ItemVendaDto;
 import br.com.estefanosantos.dto.VendaCompraLojaDto;
 import br.com.estefanosantos.exceptions.CustomException;
+import br.com.estefanosantos.model.ItemVenda;
 import br.com.estefanosantos.model.VendaCompraLoja;
 import br.com.estefanosantos.repository.EnderecoRepository;
 import br.com.estefanosantos.repository.FormaPagamentoRepository;
@@ -39,7 +41,7 @@ public class VendaCompraLojaServiceImpl implements VendaCompraLojaService {
 	public VendaCompraLojaDto salvarVendaCompraLoja(VendaCompraLoja vendaCompraLoja) throws CustomException {
 	
 		if (!formaPagamentoRepository.existsById(vendaCompraLoja.getFormaPagamento().getId())) {
-			throw new CustomException("Informe o id da forma de pagamento.");
+			throw new CustomException("Não foi encontrada forma de pagamento com o id fornecido: " +vendaCompraLoja.getFormaPagamento().getId());
 		}
 		
 		if (!fisicaRepository.existsById(vendaCompraLoja.getPessoa().getId())) {
@@ -58,6 +60,11 @@ public class VendaCompraLojaServiceImpl implements VendaCompraLojaService {
 			throw new CustomException("Não foi encontrado endereço de cobrança com o id: " + vendaCompraLoja.getEnderecoCobranca().getId());
 		}
 		
+		for (int i = 0; i < vendaCompraLoja.getItemVenda().size(); i++) {
+			vendaCompraLoja.getItemVenda().get(i).setEmpresa(vendaCompraLoja.getEmpresa());
+			vendaCompraLoja.getItemVenda().get(i).setVendaCompraLoja(vendaCompraLoja);
+		}
+		
 		vendaCompraLoja = vendaCompraLojaRepository.save(vendaCompraLoja);
 		
 		vendaCompraLoja.getNotaFiscalVenda().setVendaCompraLoja(vendaCompraLoja);
@@ -69,6 +76,13 @@ public class VendaCompraLojaServiceImpl implements VendaCompraLojaService {
 		dto.setValorTotal(vendaCompraLoja.getValorTotal());
 		dto.setValorDesconto(vendaCompraLoja.getValorDesconto());
 		dto.setDataEntrega(vendaCompraLoja.getDataEntrega());
+		
+		ItemVendaDto dtoItemVenda = new ItemVendaDto();
+		for (int i = 0; i < vendaCompraLoja.getItemVenda().size(); i++) {
+			dtoItemVenda.setQuantidade(vendaCompraLoja.getItemVenda().get(i).getQuantidade());
+			dtoItemVenda.setProduto(vendaCompraLoja.getItemVenda().get(i).getProduto());
+			dto.getItensVenda().add(dtoItemVenda);
+		}		
 		
 		return dto;
 	}

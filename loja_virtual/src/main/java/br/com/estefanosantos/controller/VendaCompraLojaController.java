@@ -61,6 +61,10 @@ public class VendaCompraLojaController {
 				|| vendaCompraLoja.getEnderecoCobranca().getId() <= 0)) {
 			throw new CustomException("Informe  o endereço de cobrança.");
 		}
+		
+		if (vendaCompraLoja.getItemVenda().isEmpty()) {
+			throw new CustomException("Informe os itens da venda.");
+		}
 
 		VendaCompraLojaDto dto = vendaCompraLojaService.salvarVendaCompraLoja(vendaCompraLoja);
 

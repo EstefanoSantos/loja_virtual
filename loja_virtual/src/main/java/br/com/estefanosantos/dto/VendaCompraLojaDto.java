@@ -2,7 +2,9 @@ package br.com.estefanosantos.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class VendaCompraLojaDto implements Serializable {
 
@@ -15,6 +17,16 @@ public class VendaCompraLojaDto implements Serializable {
 	private Date dataEntrega;
 
 	private Long enderecoEntrega;
+
+	List<ItemVendaDto> itensVenda = new ArrayList<ItemVendaDto>();
+
+	public List<ItemVendaDto> getItensVenda() {
+		return itensVenda;
+	}
+
+	public void setItensVenda(List<ItemVendaDto> itensVenda) {
+		this.itensVenda = itensVenda;
+	}
 
 	public BigDecimal getValorTotal() {
 		return valorTotal;
@@ -31,7 +43,7 @@ public class VendaCompraLojaDto implements Serializable {
 	public void setValorDesconto(BigDecimal valorDesconto) {
 		this.valorDesconto = valorDesconto;
 	}
-	
+
 	public Date getDataEntrega() {
 		return dataEntrega;
 	}
@@ -47,7 +59,5 @@ public class VendaCompraLojaDto implements Serializable {
 	public void setEnderecoEntrega(Long enderecoEntrega) {
 		this.enderecoEntrega = enderecoEntrega;
 	}
-
-	
 
 }
