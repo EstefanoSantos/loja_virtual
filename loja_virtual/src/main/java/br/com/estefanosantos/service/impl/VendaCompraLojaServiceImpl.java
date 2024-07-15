@@ -1,6 +1,8 @@
 package br.com.estefanosantos.service.impl;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -120,6 +122,10 @@ public class VendaCompraLojaServiceImpl implements VendaCompraLojaService {
 
 		VendaCompraLoja compra = vendaCompraLojaRepository.findById(id)
 				.orElseThrow(() -> new CustomException("Não foi encontrada venda com id informado: " + id));
+		
+		if (compra.getExcluido() == true) {
+			throw new CustomException("Não foi encontrada venda com id informado: " + id);
+		}
 
 		VendaCompraLojaDto compraDto = new VendaCompraLojaDto();
 
@@ -150,7 +156,7 @@ public class VendaCompraLojaServiceImpl implements VendaCompraLojaService {
 		Boolean existeVenda = vendaCompraLojaRepository.existsById(id);
 
 		if (!existeVenda) {
-			throw new CustomException("Não foi encontrada venda com o id fornecido: " + existeVenda);
+			throw new CustomException("Não foi encontrada venda com o id fornecido: " + id);
 		}
 
 		String query = "begin; " + " delete from item_venda where venda_compra_loja_id = " + id + "; "
@@ -160,6 +166,60 @@ public class VendaCompraLojaServiceImpl implements VendaCompraLojaService {
 				+ " delete from venda_compra_loja where id = " + id + "; " + " commit; ";
 
 		jdbcTemplate.execute(query);
+	}
+
+	@Override
+	public void esconderVendaTotal(Long id) throws CustomException, SQLException {
+		
+		VendaCompraLoja compra = vendaCompraLojaRepository.findById(id)
+				.orElseThrow(() -> new CustomException("Não foi encontrada venda com id informado: " + id));
+		
+		if (compra.getExcluido() == true) {
+			throw new CustomException("Não foi encontrada venda com id informado: " + id);
+		}
+		
+		String query = "begin; UPDATE venda_compra_loja set excluido = true where id = "+id+"; commit;";
+		
+		jdbcTemplate.execute(query);
+		
+	}
+
+	@Override
+	public List<VendaCompraLojaDto> buscarPorProduto(Long idProduto) throws CustomException {
+		
+		List<VendaCompraLoja> vendas = vendaCompraLojaRepository.buscarPorProduto(idProduto);
+		
+		if (vendas.isEmpty()) {
+			throw new CustomException("Não encontramos vendas com o id de produto fornecido: " + idProduto);
+		}	
+		
+		List<VendaCompraLojaDto> listaVendas = new ArrayList<VendaCompraLojaDto>();
+		
+		for (VendaCompraLoja venda : vendas) {
+			
+			VendaCompraLojaDto dto = new VendaCompraLojaDto();
+			
+			dto.setId(venda.getId());
+			dto.setDataEntrega(venda.getDataEntrega());
+			dto.setEnderecoEntrega(venda.getEnderecoEntrega().getId());
+			dto.setValorDesconto(venda.getValorDesconto());
+			dto.setValorTotal(venda.getValorTotal());			
+			
+			for (ItemVenda item : venda.getItemVenda()) {
+				
+				ItemVendaDto itemDto = new ItemVendaDto();
+				
+				itemDto.setProduto(item.getProduto());
+				itemDto.setQuantidade(item.getQuantidade());
+				
+				dto.getItensVenda().add(itemDto);
+			}
+			
+			listaVendas.add(dto);
+				
+		}
+		
+		return listaVendas;
 	}
 
 }

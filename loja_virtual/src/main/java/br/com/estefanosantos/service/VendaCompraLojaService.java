@@ -1,6 +1,7 @@
 package br.com.estefanosantos.service;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import br.com.estefanosantos.dto.VendaCompraLojaDto;
 import br.com.estefanosantos.exceptions.CustomException;
@@ -13,5 +14,9 @@ public interface VendaCompraLojaService {
 	VendaCompraLojaDto buscarVendaPorId(Long id) throws CustomException;
 	
 	void excluirVendaTotal(Long id) throws CustomException, SQLException;
+	
+	void esconderVendaTotal(Long id) throws CustomException, SQLException;
+	
+	List<VendaCompraLojaDto> buscarPorProduto(Long idProduto) throws CustomException;
 
 }

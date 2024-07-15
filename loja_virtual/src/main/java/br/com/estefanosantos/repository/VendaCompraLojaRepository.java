@@ -21,5 +21,8 @@ public interface VendaCompraLojaRepository extends JpaRepository<VendaCompraLoja
 	
 	@Query("select v from VendaCompraLoja v where v.empresa.id = ?1")
 	List<VendaCompraLoja> buscarPorEmpresa(Long idEmpresa);
+	
+	@Query("select v.vendaCompraLoja from ItemVenda v where v.vendaCompraLoja.excluido = false and v.produto.id = ?1")
+	List<VendaCompraLoja> buscarPorProduto(Long id);
 
 }
