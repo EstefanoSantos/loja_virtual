@@ -7,5 +7,7 @@ import br.com.estefanosantos.model.VendaCompraLoja;
 public interface VendaCompraLojaService {
 	
 	VendaCompraLojaDto salvarVendaCompraLoja(VendaCompraLoja vendaCompraLoja) throws CustomException;
+	
+	VendaCompraLojaDto buscarVendaPorId(Long id) throws CustomException;
 
 }

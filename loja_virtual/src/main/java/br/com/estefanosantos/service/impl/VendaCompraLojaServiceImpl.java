@@ -87,4 +87,33 @@ public class VendaCompraLojaServiceImpl implements VendaCompraLojaService {
 		return dto;
 	}
 
+	@Override
+	public VendaCompraLojaDto buscarVendaPorId(Long id) throws CustomException {
+		
+		VendaCompraLoja compra = vendaCompraLojaRepository.findById(id).orElseThrow(
+				() -> new CustomException("Não foi encontrada venda com id informado: " + id));
+		
+		VendaCompraLojaDto compraDto = new VendaCompraLojaDto();
+		
+		compraDto.setId(compra.getId());
+		compraDto.setValorTotal(compra.getValorTotal());
+		compraDto.setValorDesconto(compra.getValorDesconto());
+		compraDto.setDataEntrega(compra.getDataEntrega());
+		compraDto.setEnderecoEntrega(compra.getEnderecoEntrega().getId());
+		
+		for (ItemVenda venda : compra.getItemVenda()) {
+			
+			ItemVendaDto itemDto = new ItemVendaDto();
+			
+			itemDto.setProduto(venda.getProduto());
+			itemDto.setQuantidade(venda.getQuantidade());
+			
+			compraDto.getItensVenda().add(itemDto);
+			
+		}
+		
+		return compraDto;
+		
+	}
+
 }

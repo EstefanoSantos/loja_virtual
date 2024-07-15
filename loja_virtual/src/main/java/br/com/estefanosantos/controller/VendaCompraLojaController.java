@@ -3,6 +3,8 @@ package br.com.estefanosantos.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -68,6 +70,19 @@ public class VendaCompraLojaController {
 
 		VendaCompraLojaDto dto = vendaCompraLojaService.salvarVendaCompraLoja(vendaCompraLoja);
 
+		return new ResponseEntity<VendaCompraLojaDto>(dto, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping("/buscarVendaPorId/{idVenda}")
+	public ResponseEntity<VendaCompraLojaDto> buscarVendaPorId(@PathVariable("idVenda") Long id) throws CustomException {
+		
+		if (id == null) {
+			throw new CustomException("Informe o id da venda.");
+		}
+		
+		VendaCompraLojaDto dto = vendaCompraLojaService.buscarVendaPorId(id);
+		
 		return new ResponseEntity<VendaCompraLojaDto>(dto, HttpStatus.OK);
 	}
 

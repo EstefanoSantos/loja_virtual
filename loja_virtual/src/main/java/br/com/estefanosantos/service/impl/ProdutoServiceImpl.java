@@ -104,7 +104,7 @@ public class ProdutoServiceImpl implements ProdutoService {
 		if (produtos == null) {
 			throw new CustomException("Não foi encontrado produtos com esse nome");
 		}
-		
+
 		return produtos;
 		
 	}

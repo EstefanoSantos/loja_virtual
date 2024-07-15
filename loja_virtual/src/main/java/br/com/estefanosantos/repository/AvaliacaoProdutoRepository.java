@@ -28,6 +28,4 @@ public interface AvaliacaoProdutoRepository extends JpaRepository<AvaliacaoProdu
 	@Query(nativeQuery = true, value = "delete from avaliacao_produto where id = ?1 and pessoa_id = ?2")
 	void apagarAvaliacaoPessoa(Long idAvaliacao, Long idPessoa);
 	
-	
-
 }
