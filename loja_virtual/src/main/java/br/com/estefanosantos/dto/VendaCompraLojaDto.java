@@ -9,7 +9,7 @@ import java.util.List;
 public class VendaCompraLojaDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private Long id;
 
 	private BigDecimal valorTotal;
@@ -22,7 +22,16 @@ public class VendaCompraLojaDto implements Serializable {
 
 	List<ItemVendaDto> itensVenda = new ArrayList<ItemVendaDto>();
 
-	
+	private Long idStatusRastreio;
+
+	public Long getIdStatusRastreio() {
+		return idStatusRastreio;
+	}
+
+	public void setIdStatusRastreio(Long idStatusRastreio) {
+		this.idStatusRastreio = idStatusRastreio;
+	}
+
 	public Long getId() {
 		return id;
 	}

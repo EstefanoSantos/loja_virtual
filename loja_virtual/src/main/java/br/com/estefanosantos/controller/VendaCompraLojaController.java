@@ -1,8 +1,11 @@
 package br.com.estefanosantos.controller;
 
+import java.sql.SQLException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -85,5 +88,15 @@ public class VendaCompraLojaController {
 		
 		return new ResponseEntity<VendaCompraLojaDto>(dto, HttpStatus.OK);
 	}
+	
+	@ResponseBody
+	@DeleteMapping("/excluirVendaTotal/{id}")
+	public ResponseEntity<String> excluirVendaTotal(@PathVariable("id") Long id) throws CustomException, SQLException {
+		
+		vendaCompraLojaService.excluirVendaTotal(id);
+		
+		return new ResponseEntity<String>("Venda removida com sucesso!", HttpStatus.OK);
+	}
+	
 
 }
