@@ -122,7 +122,7 @@ public class VendaCompraLojaServiceImpl implements VendaCompraLojaService {
 
 		VendaCompraLoja compra = vendaCompraLojaRepository.findById(id)
 				.orElseThrow(() -> new CustomException("Não foi encontrada venda com id informado: " + id));
-		
+
 		if (compra.getExcluido() == true) {
 			throw new CustomException("Não foi encontrada venda com id informado: " + id);
 		}
@@ -170,55 +170,87 @@ public class VendaCompraLojaServiceImpl implements VendaCompraLojaService {
 
 	@Override
 	public void esconderVendaTotal(Long id) throws CustomException, SQLException {
-		
+
 		VendaCompraLoja compra = vendaCompraLojaRepository.findById(id)
 				.orElseThrow(() -> new CustomException("Não foi encontrada venda com id informado: " + id));
-		
+
 		if (compra.getExcluido() == true) {
 			throw new CustomException("Não foi encontrada venda com id informado: " + id);
 		}
-		
-		String query = "begin; UPDATE venda_compra_loja set excluido = true where id = "+id+"; commit;";
-		
+
+		String query = "begin; UPDATE venda_compra_loja set excluido = true where id = " + id + "; commit;";
+
 		jdbcTemplate.execute(query);
-		
+
 	}
 
 	@Override
-	public List<VendaCompraLojaDto> buscarPorProduto(Long idProduto) throws CustomException {
+	public List<VendaCompraLojaDto> buscarVendaDinamica(String valor, String tipoConsulta) throws CustomException {
 		
-		List<VendaCompraLoja> vendas = vendaCompraLojaRepository.buscarPorProduto(idProduto);
 		
+		List<VendaCompraLoja> vendas = null; 
+		
+		if (tipoConsulta.equalsIgnoreCase("POR_PESSOA_ID")) {
+			
+			vendas = vendaCompraLojaRepository.buscarPorPessoa(Long.parseLong(valor));
+			
+		} else if (tipoConsulta.equalsIgnoreCase("POR_EMPRESA_ID")) {
+			
+			vendas = vendaCompraLojaRepository.buscarPorEmpresa(Long.parseLong(valor));
+			
+		} else if (tipoConsulta.equalsIgnoreCase("POR_FORMA_PAGAMENTO")) {
+			
+			vendas = vendaCompraLojaRepository.buscarPorFormaDePagamento(Long.parseLong(valor));
+			
+		} else if (tipoConsulta.equalsIgnoreCase("POR_PRODUTO_ID")) {
+			
+			vendas = vendaCompraLojaRepository.buscarPorProduto(Long.parseLong(valor));
+			
+		} else if (tipoConsulta.equalsIgnoreCase("POR_NOME_PRODUTO")) {
+			
+			vendas = vendaCompraLojaRepository.buscarPorNomeProduto(valor.toUpperCase().trim());
+			
+		} else if (tipoConsulta.equalsIgnoreCase("POR_NOME_CLIENTE")) {
+			
+			vendas= vendaCompraLojaRepository.buscarPorNomeCliente(valor.toUpperCase().trim());
+			
+		} else {
+			
+			throw new CustomException("Informe o parâmetro correto de busca.");
+			
+		}
+		
+
 		if (vendas.isEmpty()) {
-			throw new CustomException("Não encontramos vendas com o id de produto fornecido: " + idProduto);
-		}	
-		
+			throw new CustomException("Não encontramos vendas com o id de produto fornecido: " + valor);
+		}
+
 		List<VendaCompraLojaDto> listaVendas = new ArrayList<VendaCompraLojaDto>();
-		
+
 		for (VendaCompraLoja venda : vendas) {
-			
+
 			VendaCompraLojaDto dto = new VendaCompraLojaDto();
-			
+
 			dto.setId(venda.getId());
 			dto.setDataEntrega(venda.getDataEntrega());
 			dto.setEnderecoEntrega(venda.getEnderecoEntrega().getId());
 			dto.setValorDesconto(venda.getValorDesconto());
-			dto.setValorTotal(venda.getValorTotal());			
-			
+			dto.setValorTotal(venda.getValorTotal());
+
 			for (ItemVenda item : venda.getItemVenda()) {
-				
+
 				ItemVendaDto itemDto = new ItemVendaDto();
-				
+
 				itemDto.setProduto(item.getProduto());
 				itemDto.setQuantidade(item.getQuantidade());
-				
+
 				dto.getItensVenda().add(itemDto);
 			}
-			
+
 			listaVendas.add(dto);
-				
+
 		}
-		
+
 		return listaVendas;
 	}
 

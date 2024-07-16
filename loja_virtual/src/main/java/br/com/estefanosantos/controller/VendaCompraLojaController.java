@@ -110,10 +110,11 @@ public class VendaCompraLojaController {
 	}
 	
 	@ResponseBody
-	@GetMapping("/buscarVendasPorProduto/{idProduto}")
-	public ResponseEntity<List<VendaCompraLojaDto>> buscarVendasPorProduto(@PathVariable("idProduto") Long idProduto) throws CustomException {
+	@GetMapping("/buscarVendasDinamica/{valor}/{tipoConsulta}")
+	public ResponseEntity<List<VendaCompraLojaDto>> buscarVendasDinicamica(@PathVariable("valor") String valor,
+			@PathVariable("tipoConsulta") String tipoConsulta) throws CustomException {
 		
-		List<VendaCompraLojaDto> vendas = vendaCompraLojaService.buscarPorProduto(idProduto);
+		List<VendaCompraLojaDto> vendas = vendaCompraLojaService.buscarVendaDinamica(valor, tipoConsulta);
 		
 		return new ResponseEntity<List<VendaCompraLojaDto>>(vendas, HttpStatus.OK);
 	}

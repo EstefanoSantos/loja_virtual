@@ -17,6 +17,6 @@ public interface VendaCompraLojaService {
 	
 	void esconderVendaTotal(Long id) throws CustomException, SQLException;
 	
-	List<VendaCompraLojaDto> buscarPorProduto(Long idProduto) throws CustomException;
+	List<VendaCompraLojaDto> buscarVendaDinamica(String valor, String tipoConsulta) throws CustomException;
 
 }
