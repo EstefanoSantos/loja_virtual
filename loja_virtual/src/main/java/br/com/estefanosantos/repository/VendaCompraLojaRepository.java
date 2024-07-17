@@ -35,4 +35,7 @@ public interface VendaCompraLojaRepository extends JpaRepository<VendaCompraLoja
 	@Query("select v.vendaCompraLoja from ItemVenda v where v.vendaCompraLoja.excluido = false"
 			+ " and v.vendaCompraLoja.dataVenda between ?1 and ?2")
 	List<VendaCompraLoja> buscarPorPeriodoData(Date data1, Date data2);
+	
+	@Query("select v.vendaCompraLoja from ItemVenda v where v.vendaCompraLoja.excluido = false and v.vendaCompraLoja.pessoa.cpf = ?1")
+	List<VendaCompraLoja> buscarPorCpf(String cpf);
 }

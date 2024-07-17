@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import br.com.estefanosantos.exceptions.CustomException;
 import br.com.estefanosantos.repository.VendaCompraLojaRepository;
+import br.com.estefanosantos.strategies.vendas.VendaBuscarPorCpfStrategy;
 import br.com.estefanosantos.strategies.vendas.VendaBuscarPorEmpresaIdStrategy;
 import br.com.estefanosantos.strategies.vendas.VendaBuscarPorFormaPagamentoStrategy;
 import br.com.estefanosantos.strategies.vendas.VendaBuscarPorNomeClienteStrategy;
@@ -29,6 +30,7 @@ public class VendaBuscarStrategyFactory {
 		strategies.put("POR_PRODUTO_ID", new VendaBuscarPorProdutoStrategy(repository));
 		strategies.put("POR_NOME_PRODUTO", new VendaBuscarPorNomeProdutoStrategy(repository));
 		strategies.put("POR_NOME_CLIENTE", new VendaBuscarPorNomeClienteStrategy(repository));
+		strategies.put("POR_CPF", new VendaBuscarPorCpfStrategy(repository));
 		
 	}	
 	
