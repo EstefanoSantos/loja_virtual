@@ -2,6 +2,7 @@ package br.com.estefanosantos.service.impl;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -220,9 +221,46 @@ public class VendaCompraLojaServiceImpl implements VendaCompraLojaService {
 			
 		}
 		
-
 		if (vendas.isEmpty()) {
 			throw new CustomException("Não encontramos vendas com o id de produto fornecido: " + valor);
+		}
+
+		List<VendaCompraLojaDto> listaVendas = new ArrayList<VendaCompraLojaDto>();
+
+		for (VendaCompraLoja venda : vendas) {
+
+			VendaCompraLojaDto dto = new VendaCompraLojaDto();
+
+			dto.setId(venda.getId());
+			dto.setDataEntrega(venda.getDataEntrega());
+			dto.setEnderecoEntrega(venda.getEnderecoEntrega().getId());
+			dto.setValorDesconto(venda.getValorDesconto());
+			dto.setValorTotal(venda.getValorTotal());
+
+			for (ItemVenda item : venda.getItemVenda()) {
+
+				ItemVendaDto itemDto = new ItemVendaDto();
+
+				itemDto.setProduto(item.getProduto());
+				itemDto.setQuantidade(item.getQuantidade());
+
+				dto.getItensVenda().add(itemDto);
+			}
+
+			listaVendas.add(dto);
+
+		}
+
+		return listaVendas;
+	}
+
+	@Override
+	public List<VendaCompraLojaDto> buscarPorPeriodoData(Date data1, Date data2) throws CustomException {
+		
+		List<VendaCompraLoja> vendas = vendaCompraLojaRepository.buscarPorPeriodoData(data1, data2);
+		
+		if (vendas.isEmpty()) {
+			throw new CustomException("Não encontramos vendas no período de tempo informado.");
 		}
 
 		List<VendaCompraLojaDto> listaVendas = new ArrayList<VendaCompraLojaDto>();

@@ -1,6 +1,9 @@
 package br.com.estefanosantos.controller;
 
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,5 +122,19 @@ public class VendaCompraLojaController {
 		return new ResponseEntity<List<VendaCompraLojaDto>>(vendas, HttpStatus.OK);
 	}
 	
-	
+	@ResponseBody
+	@GetMapping("/buscarPorPeriodoData/{data1}/{data2}")
+	public ResponseEntity<List<VendaCompraLojaDto>> buscarPorPeriodoData(
+			@PathVariable("data1") String data1, @PathVariable("data2") String data2) throws ParseException, CustomException {
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		Date d1 = dateFormat.parse(data1);
+		
+		Date d2 = dateFormat.parse(data2);
+		
+		List<VendaCompraLojaDto> vendas = vendaCompraLojaService.buscarPorPeriodoData(d1, d2);
+		
+		return new ResponseEntity<List<VendaCompraLojaDto>>(vendas, HttpStatus.OK);
+	}
 }

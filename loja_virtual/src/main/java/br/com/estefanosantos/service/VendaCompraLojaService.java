@@ -1,6 +1,7 @@
 package br.com.estefanosantos.service;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import br.com.estefanosantos.dto.VendaCompraLojaDto;
@@ -18,5 +19,7 @@ public interface VendaCompraLojaService {
 	void esconderVendaTotal(Long id) throws CustomException, SQLException;
 	
 	List<VendaCompraLojaDto> buscarVendaDinamica(String valor, String tipoConsulta) throws CustomException;
+	
+	List<VendaCompraLojaDto> buscarPorPeriodoData(Date data1, Date data2) throws CustomException;
 
 }

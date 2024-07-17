@@ -1,5 +1,6 @@
 package br.com.estefanosantos.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -29,6 +30,9 @@ public interface VendaCompraLojaRepository extends JpaRepository<VendaCompraLoja
 	List<VendaCompraLoja> buscarPorNomeProduto(String nome);
 	
 	@Query("select v.vendaCompraLoja from ItemVenda v where v.vendaCompraLoja.excluido = false and upper(trim(v.vendaCompraLoja.pessoa.nome)) like %?1%")
-	List<VendaCompraLoja> buscarPorNomeCliente(String nome);
-
+	List<VendaCompraLoja> buscarPorNomeCliente(String nome);	
+	
+	@Query("select v.vendaCompraLoja from ItemVenda v where v.vendaCompraLoja.excluido = false"
+			+ " and v.vendaCompraLoja.dataVenda between ?1 and ?2")
+	List<VendaCompraLoja> buscarPorPeriodoData(Date data1, Date data2);
 }
