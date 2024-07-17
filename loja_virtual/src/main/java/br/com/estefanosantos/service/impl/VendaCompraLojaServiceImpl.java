@@ -23,6 +23,8 @@ import br.com.estefanosantos.repository.PessoaJuridicaRepository;
 import br.com.estefanosantos.repository.StatusRastreioRepository;
 import br.com.estefanosantos.repository.VendaCompraLojaRepository;
 import br.com.estefanosantos.service.VendaCompraLojaService;
+import br.com.estefanosantos.strategies.VendaBuscarStrategyFactory;
+import br.com.estefanosantos.strategies.VendaCompraLojaStrategy;
 
 @Service
 public class VendaCompraLojaServiceImpl implements VendaCompraLojaService {
@@ -50,6 +52,9 @@ public class VendaCompraLojaServiceImpl implements VendaCompraLojaService {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	private VendaBuscarStrategyFactory strategyFactory;
 
 	@Override
 	public VendaCompraLojaDto salvarVendaCompraLoja(VendaCompraLoja vendaCompraLoja) throws CustomException {
@@ -187,42 +192,15 @@ public class VendaCompraLojaServiceImpl implements VendaCompraLojaService {
 
 	@Override
 	public List<VendaCompraLojaDto> buscarVendaDinamica(String valor, String tipoConsulta) throws CustomException {
-		
-		
+				
 		List<VendaCompraLoja> vendas = null; 
 		
-		if (tipoConsulta.equalsIgnoreCase("POR_PESSOA_ID")) {
-			
-			vendas = vendaCompraLojaRepository.buscarPorPessoa(Long.parseLong(valor));
-			
-		} else if (tipoConsulta.equalsIgnoreCase("POR_EMPRESA_ID")) {
-			
-			vendas = vendaCompraLojaRepository.buscarPorEmpresa(Long.parseLong(valor));
-			
-		} else if (tipoConsulta.equalsIgnoreCase("POR_FORMA_PAGAMENTO")) {
-			
-			vendas = vendaCompraLojaRepository.buscarPorFormaDePagamento(Long.parseLong(valor));
-			
-		} else if (tipoConsulta.equalsIgnoreCase("POR_PRODUTO_ID")) {
-			
-			vendas = vendaCompraLojaRepository.buscarPorProduto(Long.parseLong(valor));
-			
-		} else if (tipoConsulta.equalsIgnoreCase("POR_NOME_PRODUTO")) {
-			
-			vendas = vendaCompraLojaRepository.buscarPorNomeProduto(valor.toUpperCase().trim());
-			
-		} else if (tipoConsulta.equalsIgnoreCase("POR_NOME_CLIENTE")) {
-			
-			vendas= vendaCompraLojaRepository.buscarPorNomeCliente(valor.toUpperCase().trim());
-			
-		} else {
-			
-			throw new CustomException("Informe o parâmetro correto de busca.");
-			
-		}
+		VendaCompraLojaStrategy strategy = strategyFactory.getStrategy(tipoConsulta);
+		
+		vendas = strategy.buscar(valor);
 		
 		if (vendas.isEmpty()) {
-			throw new CustomException("Não encontramos vendas com o id de produto fornecido: " + valor);
+			throw new CustomException("Não encontramos vendas com o valor de busca fornecido: " + valor);
 		}
 
 		List<VendaCompraLojaDto> listaVendas = new ArrayList<VendaCompraLojaDto>();
