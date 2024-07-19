@@ -14,7 +14,8 @@ import br.com.estefanosantos.model.VendaCompraLoja;
 @Repository
 public interface VendaCompraLojaRepository extends JpaRepository<VendaCompraLoja, Long> {
 	
-	@Query("select v from VendaCompraLoja v where v.pessoa.id = ?1")
+	@Query("select v.vendaCompraLoja from ItemVenda v where v.vendaCompraLoja.excluido = false"
+			+ " and v.vendaCompraLoja.pessoa.id = ?1")
 	List<VendaCompraLoja> buscarPorPessoa(Long idPessoa);
 	
 	@Query("select v from VendaCompraLoja v where v.formaPagamento.id = ?1")
@@ -38,4 +39,5 @@ public interface VendaCompraLojaRepository extends JpaRepository<VendaCompraLoja
 	
 	@Query("select v.vendaCompraLoja from ItemVenda v where v.vendaCompraLoja.excluido = false and v.vendaCompraLoja.pessoa.cpf = ?1")
 	List<VendaCompraLoja> buscarPorCpf(String cpf);
+	
 }

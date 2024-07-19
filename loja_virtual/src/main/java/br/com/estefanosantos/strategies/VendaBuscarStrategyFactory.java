@@ -39,7 +39,7 @@ public class VendaBuscarStrategyFactory {
 		VendaCompraLojaStrategy strategy = strategies.get(parametro.toUpperCase());
 		
 		if (strategy == null) {
-			throw new CustomException("Informe o parâmetro de buscar correto.");
+			throw new CustomException("Informe o parâmetro de busca correto.");
 		}
 		
 		return strategy;
