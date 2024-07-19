@@ -52,7 +52,7 @@ public class VendaCompraLojaServiceImpl implements VendaCompraLojaService {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
+
 	@Autowired
 	private VendaBuscarStrategyFactory strategyFactory;
 
@@ -192,44 +192,18 @@ public class VendaCompraLojaServiceImpl implements VendaCompraLojaService {
 
 	@Override
 	public List<VendaCompraLojaDto> buscarVendaDinamica(String valor, String tipoConsulta) throws CustomException {
-				
-		List<VendaCompraLoja> vendas = null; 
-		
+
+		List<VendaCompraLoja> vendas = null;
+
 		VendaCompraLojaStrategy strategy = strategyFactory.getStrategy(tipoConsulta);
-		
+
 		vendas = strategy.buscar(valor);
-		
+
 		if (vendas.isEmpty()) {
 			throw new CustomException("Não encontramos vendas com o valor de busca fornecido: " + valor);
 		}
 
-		List<VendaCompraLojaDto> listaVendas = new ArrayList<VendaCompraLojaDto>();
-
-		for (VendaCompraLoja venda : vendas) {
-
-			VendaCompraLojaDto dto = new VendaCompraLojaDto();
-
-			dto.setId(venda.getId());
-			dto.setDataEntrega(venda.getDataEntrega());
-			dto.setEnderecoEntrega(venda.getEnderecoEntrega().getId());
-			dto.setValorDesconto(venda.getValorDesconto());
-			dto.setValorTotal(venda.getValorTotal());
-
-			for (ItemVenda item : venda.getItemVenda()) {
-
-				ItemVendaDto itemDto = new ItemVendaDto();
-
-				itemDto.setProduto(item.getProduto());
-				itemDto.setQuantidade(item.getQuantidade());
-
-				dto.getItensVenda().add(itemDto);
-			}
-
-			listaVendas.add(dto);
-
-		}
-
-		return listaVendas;
+		return maptoListVendaDto(vendas);
 	}
 
 	@Override
@@ -240,6 +214,13 @@ public class VendaCompraLojaServiceImpl implements VendaCompraLojaService {
 		if (vendas.isEmpty()) {
 			throw new CustomException("Não encontramos vendas no período de tempo informado.");
 		}
+	
+		return maptoListVendaDto(vendas);
+		
+	}
+	
+
+	private List<VendaCompraLojaDto> maptoListVendaDto(List<VendaCompraLoja> vendas) {
 
 		List<VendaCompraLojaDto> listaVendas = new ArrayList<VendaCompraLojaDto>();
 
@@ -266,7 +247,6 @@ public class VendaCompraLojaServiceImpl implements VendaCompraLojaService {
 			listaVendas.add(dto);
 
 		}
-
 		return listaVendas;
 	}
 
