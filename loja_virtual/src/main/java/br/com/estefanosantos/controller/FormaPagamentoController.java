@@ -1,13 +1,18 @@
 package br.com.estefanosantos.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.estefanosantos.dto.FormaPagamentoDto;
 import br.com.estefanosantos.exceptions.CustomException;
 import br.com.estefanosantos.model.FormaPagamento;
 import br.com.estefanosantos.service.FormaPagamentoService;
@@ -37,5 +42,14 @@ public class FormaPagamentoController {
 		formaPagamentoService.salvar(formaPagamento);
 		
 		return new ResponseEntity<String>("Forma de pagamento cadastrada: " +formaPagamento.getFormaPagamento(), HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping("/findFormaPagamentoByEmpresa/{idEmpresa}")
+	public ResponseEntity<List<FormaPagamentoDto>> findByEmpresaId(@PathVariable("idEmpresa") Long idEmpresa) throws CustomException {
+		
+		List<FormaPagamentoDto> list = formaPagamentoService.findByEmpresaId(idEmpresa);
+		
+		return new ResponseEntity<List<FormaPagamentoDto>>(list, HttpStatus.OK);
 	}
 }
